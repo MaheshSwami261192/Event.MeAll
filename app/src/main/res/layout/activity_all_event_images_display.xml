@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Activity.AllEventImagesDisplayActivity">
+
+
+    <LinearLayout
+        android:id="@+id/linAlphaBlock"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorGrayFaint"
+        android:orientation="vertical"
+        tools:context=".Activity.MainActivity">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            tools:context=".Activity.MainActivity">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/colorToolbar"
+                android:weightSum="2">
+
+                <LinearLayout
+                    android:id="@+id/llBack"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.3"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:padding="5dp"
+                        android:src="@drawable/back_arrow" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.4"
+                    android:background="@color/colorToolbar">
+
+                    <TextView
+                        android:id="@+id/txtEventName"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center|start"
+                        android:paddingStart="10dp"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="22dp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.3"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/imgSwitchGallaryToTimeline"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="12dp"
+                        android:src="@drawable/gallery" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvEventAllImages"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@android:color/transparent"
+                android:scrollbars="vertical" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvUserwiseImages"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@color/colorGrayLight"
+                android:scrollbars="vertical" />
+
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+
+        <include layout="@layout/include_comment_layout"/>
+
+
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAddEventPhotos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="25dp"
+        android:backgroundTint="@color/colorWhite"
+        app:borderWidth="0dp"
+        android:src="@drawable/add"
+        android:tint="@color/colorGrayFaint"
+        app:fabSize="mini" />
+
+
+</RelativeLayout>

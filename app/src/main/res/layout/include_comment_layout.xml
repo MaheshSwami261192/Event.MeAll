@@ -1,0 +1,351 @@
+<LinearLayout android:id="@+id/cvSwipingLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="bottom"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout
+        android:id="@+id/closeComment"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:background="@color/colorToolbar"
+        android:weightSum="2"
+        >
+
+
+            <LinearLayout
+                android:id="@+id/llBack"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_weight="0.3"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:padding="5dp"
+                    android:src="@drawable/back_arrow" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llTitle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.4"
+                android:background="@color/colorToolbar">
+
+                <TextView
+                    android:id="@+id/txtEventName"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center|start"
+                    android:paddingStart="10dp"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="22dp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_weight="0.3"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/imgSwitchGallaryToTimeline"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="12dp"
+                    android:src="@drawable/gallery"
+                    android:visibility="invisible"
+                    />
+
+            </LinearLayout>
+
+    </LinearLayout>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cvEventPhotoDetail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="5dp"
+        android:orientation="vertical"
+        android:visibility="visible"
+        android:padding="3dp">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <!--
+                                android:layout_height="450dp"
+                                android:layout_marginBottom="40dp"-->
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="3dp"
+                android:layout_marginBottom="50dp"
+                >
+
+                <RelativeLayout
+                    android:id="@+id/rlCloseSheet"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+
+                    <ImageView
+                        android:id="@+id/imgDetailsOfImage"
+                        android:layout_width="match_parent"
+                        android:layout_height="180dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/image_three" />
+
+                    <ImageView
+                        android:id="@+id/imgCloseCommentSheet"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_gravity="end"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:background="@drawable/circular_gray_background"
+                        android:src="@drawable/cancel"
+                        android:visibility="gone"
+                        />
+                </RelativeLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="5dp">
+
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_gravity="center"
+                        android:elevation="2dp"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/imgEventCreatorProfileDes"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginBottom="2dp"
+                            android:gravity="center"
+                            android:src="@drawable/default_profile" />
+
+                        <TextView
+                            android:id="@+id/eventCreatorNameDes"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center|start"
+                            android:layout_marginStart="5dp"
+                            android:layout_toEndOf="@+id/imgEventCreatorProfileDes"
+                            android:gravity="center|start"
+                            android:text="John Doe"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="14dp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/txtImgTitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/eventCreatorNameDes"
+                            android:layout_marginStart="5dp"
+                            android:layout_toEndOf="@+id/imgEventCreatorProfileDes"
+                            android:text="This will be the title of image here"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="12dp" />
+
+                        <TextView
+                            android:id="@+id/eventDateTimeDes"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:gravity="center"
+                            android:src="@color/colorGrayDark"
+                            android:text="22-10-2019 10:15 AM"
+                            android:textSize="10dp" />
+
+                    </RelativeLayout>
+
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/colorGrayLight" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvComments"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    android:layout_marginTop="10dp"
+
+                    />
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_gravity="bottom"
+                android:background="@color/colorGrayLight"
+
+                android:orientation="horizontal"
+                android:padding="5dp"
+                android:weightSum="1">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:weightSum="100"
+                    android:background="@drawable/rounded_edittext"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/edtCommentDes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="80"
+                        android:background="@android:color/transparent"
+                        android:hint="Type a message"
+                        android:textSize="16dp"
+                        android:layout_gravity="center_vertical"
+                        android:inputType="textMultiLine"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="15dp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="20"
+                        android:id="@+id/commentSent"
+                        android:background="@drawable/rounded_edittext"
+                        android:src="@mipmap/ic_send" />
+                </LinearLayout>
+            </LinearLayout>
+        </FrameLayout>
+
+    </androidx.cardview.widget.CardView>
+
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cvAddComment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="5dp"
+        android:orientation="vertical"
+
+        android:padding="3dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_gravity="center"
+                    android:elevation="2dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/imgEventCreatorProfileCmt"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginBottom="2dp"
+                        android:gravity="center"
+                        android:src="@drawable/default_profile" />
+
+                    <TextView
+                        android:id="@+id/eventCreatorNameCmt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center|start"
+                        android:layout_marginStart="5dp"
+                        android:layout_toEndOf="@+id/imgEventCreatorProfileCmt"
+                        android:gravity="center|start"
+                        android:text="John Doe"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="14dp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/eventSelectedImage"
+                        android:layout_width="40dp"
+                        android:layout_height="30dp"
+                        android:layout_alignParentEnd="true"
+                        android:gravity="center"
+                        android:src="@color/colorGrayDark" />
+
+                </RelativeLayout>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorGrayLight" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@color/colorGrayLight"
+                android:padding="5dp"
+                android:weightSum="1">
+
+                <EditText
+                    android:id="@+id/edtCommentCmt"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/rounded_edittext"
+                    android:drawableRight="@mipmap/ic_send"
+                    android:hint="Type a message"
+                    android:inputType="textMultiLine"
+                    android:textSize="16dp"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    />
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+
+</LinearLayout>

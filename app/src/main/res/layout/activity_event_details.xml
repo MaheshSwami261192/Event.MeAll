@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".Activity.MainActivity">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            tools:context=".Activity.MainActivity">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/colorToolbar"
+                android:weightSum="2">
+
+                <LinearLayout
+                    android:id="@+id/llBack"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.3"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:padding="5dp"
+                        android:src="@drawable/back_arrow" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/circular_gray_background"
+                    android:src="@drawable/calendar_event" />
+
+                <LinearLayout
+                    android:id="@+id/llTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="15dp"
+                    android:layout_weight="1.4"
+                    android:background="@color/colorToolbar"
+                    android:orientation="vertical">
+
+                    <com.prometteur.myevents.Utils.TextViewCustomFont
+                        android:id="@+id/tv_eventTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center|start"
+                        android:text="Event Title"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="18dp"
+                        android:textStyle="bold" />
+
+                    <com.prometteur.myevents.Utils.TextViewCustomFont
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="start"
+                        android:id="@+id/tv_Location"
+                        android:text="Warje,Pune"
+                        android:textColor="@color/colorGrayDark"
+                        android:textSize="15dp" />
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorGrayLight"
+
+                >
+
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fadingEdge="vertical|horizontal"
+                    android:fillViewport="true">
+
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        >
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:background="@color/colorWhite"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_margin="10dp"
+                                android:weightSum="100"
+                                android:gravity="center_vertical"
+                                android:layout_height="wrap_content" >
+                                <ImageView
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    android:layout_gravity="center"
+                                    android:background="@drawable/circular_gray_background"
+                                    android:src="@drawable/add_member" />
+
+
+                               <com.prometteur.myevents.Utils.TextViewCustomFont
+                                    android:layout_width="wrap_content"
+                                    android:text="Add participants"
+                                    android:textSize="16dp"
+                                   android:id="@+id/tv_addMember"
+                                   android:textColor="@color/colorBlueOr"
+                                   android:layout_marginLeft="10dp"
+                                   android:layout_weight="20"
+                                    android:layout_height="wrap_content" />
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="10dp"
+                                android:layout_marginTop="10dp"
+                                android:weightSum="4"
+                                android:gravity=""
+                                >
+
+                                <ImageView
+                                    android:id="@+id/imgContactProfile"
+                                    android:layout_width="37dp"
+                                    android:layout_height="37dp"
+                                    android:layout_gravity="top"
+                                    android:src="@drawable/user" />
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical">
+
+                                    <com.prometteur.myevents.Utils.TextViewCustomFont
+                                        android:id="@+id/txtContactName"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="match_parent"
+                                        android:gravity="center|start"
+                                        android:paddingStart="10dp"
+                                        android:text="John Doe"
+                                        android:textColor="@color/colorBlack"
+                                        android:textSize="16dp" />
+
+                                    <com.prometteur.myevents.Utils.TextViewCustomFont
+                                        android:id="@+id/txtContactSubName"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="match_parent"
+                                        android:gravity="center|start"
+                                        android:paddingStart="10dp"
+                                        android:text="John Doe"
+                                        android:textColor="@color/colorGrayDark"
+                                        android:textSize="14dp" />
+
+                                    <com.prometteur.myevents.Utils.TextViewCustomFont
+                                        android:id="@+id/tvDateTime"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="match_parent"
+                                        android:gravity="center|start"
+                                        android:paddingStart="10dp"
+                                        android:text="John Doe"
+                                        android:textColor="@color/colorGrayDark"
+                                        android:textSize="10dp" />
+
+
+                                </LinearLayout>
+                            </LinearLayout>
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/rvContactList"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="10dp"
+                                android:scrollbars="none" />
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                </ScrollView>
+
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</LinearLayout>

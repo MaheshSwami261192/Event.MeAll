@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Activity.MobileVerificationActivity">
+<androidx.core.widget.NestedScrollView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="50dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginEnd="50dp"
+                android:layout_marginRight="50dp"
+                android:layout_marginBottom="30dp"
+                android:src="@drawable/verification_icon" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|top"
+
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:gravity="center|top"
+                android:orientation="horizontal">
+
+               <!-- <EditText
+                    android:id="@+id/edtCountryChange"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_gravity="start"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginLeft="40dp"
+                    android:background="@color/edtColor"
+                    android:clickable="true"
+                    android:drawableLeft="@drawable/countrybackground"
+                    android:editable="false"
+                    android:focusable="false"
+                    android:padding="5dp"
+                    android:text=" +91"
+                    android:textColor="@android:color/black" />-->
+
+                <com.rilixtech.widget.countrycodepicker.CountryCodePicker
+                    android:id="@+id/ccpVerify"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginLeft="20dp"
+                    app:ccp_defaultNameCode="IN"
+                    app:ccp_hideNameCode="true"
+                    android:background="@android:color/white"
+                    />
+
+                <EditText
+                    android:id="@+id/edtMobileNumner"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_gravity="start"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginEnd="40dp"
+                    android:layout_marginRight="40dp"
+                    android:background="@color/colorGrayLight"
+                    android:hint="Enter your mobile number"
+                    android:inputType="numberDecimal"
+                    android:lines="1"
+                    android:padding="5dp"
+                    android:singleLine="true"
+                    android:textColor="@android:color/black"
+                    android:textSize="15dp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/txtResendOTP"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="50dp"
+                android:layout_marginRight="50dp"
+                android:gravity="end"
+                android:textColor="@color/colorBlue"
+                android:textSize="15dp" />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="35dp"
+                android:gravity="center"
+                android:text="Verification Code"
+                android:textColor="@color/colorBlack"
+                android:textSize="22dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:text="OTP has sent to your mobile\n number, Please verify"
+                android:textSize="16dp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|bottom"
+                android:layout_marginTop="30dp"
+                android:gravity="center|bottom"
+                android:orientation="horizontal"
+                android:fitsSystemWindows="true"
+                >
+
+                <EditText
+                    android:id="@+id/edtOTPOne"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="start"
+                    android:layout_margin="10dp"
+                    android:background="@color/colorGrayLight"
+                    android:gravity="center"
+                    android:inputType="numberDecimal"
+                    android:lines="1"
+                    android:maxEms="1"
+                    android:maxLength="1"
+                    android:maxLines="1"
+                    android:textColor="@android:color/black"
+                    android:textSize="15dp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/edtOTPTwo"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="start"
+                    android:layout_margin="10dp"
+                    android:background="@color/colorGrayLight"
+                    android:gravity="center"
+                    android:inputType="numberDecimal"
+                    android:lines="1"
+                    android:maxEms="1"
+                    android:maxLength="1"
+                    android:maxLines="1"
+                    android:textColor="@android:color/black"
+                    android:textSize="15dp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/edtOTPThree"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="start"
+                    android:layout_margin="10dp"
+                    android:background="@color/colorGrayLight"
+                    android:gravity="center"
+                    android:inputType="numberDecimal"
+                    android:lines="1"
+                    android:maxEms="1"
+                    android:maxLength="1"
+                    android:maxLines="1"
+                    android:textColor="@android:color/black"
+                    android:textSize="15dp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/edtOTPFour"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="start"
+                    android:layout_margin="10dp"
+                    android:background="@color/colorGrayLight"
+                    android:gravity="center"
+                    android:inputType="numberDecimal"
+                    android:lines="1"
+                    android:maxEms="1"
+                    android:maxLength="1"
+                    android:maxLines="1"
+                    android:textColor="@android:color/black"
+                    android:textSize="15dp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/edtOTPFive"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="start"
+                    android:layout_margin="10dp"
+                    android:background="@color/colorGrayLight"
+                    android:gravity="center"
+                    android:inputType="numberDecimal"
+                    android:lines="1"
+                    android:maxEms="1"
+                    android:maxLength="1"
+                    android:maxLines="1"
+                    android:textColor="@android:color/black"
+                    android:textSize="15dp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/edtOTPSix"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="start"
+                    android:layout_margin="10dp"
+                    android:background="@color/colorGrayLight"
+                    android:gravity="center"
+                    android:inputType="numberDecimal"
+                    android:lines="1"
+                    android:maxEms="1"
+                    android:maxLength="1"
+                    android:maxLines="1"
+                    android:textColor="@android:color/black"
+                    android:textSize="15dp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
+            <com.prometteur.myevents.Utils.ButtonCustomFont
+                android:id="@+id/btnVerify"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginBottom="25dp"
+                android:background="@drawable/red_round_button_yello"
+                android:elevation="6dp"
+                android:padding="5dp"
+                android:text="     VERIFY     "
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>
+</LinearLayout>

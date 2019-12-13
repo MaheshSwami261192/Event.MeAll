@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#e2e1f0</color>
+    <color name="colorPrimaryDark">#e2e1f0</color>
+    <!--<color name="colorPrimaryDark">#00574B</color>-->
+    <!--<color name="colorAccent">#e2e1f0</color>-->
+    <color name="colorAccent">#8c1aff</color>
+    <color name="edtColor">#ffff99</color>
+    <color name="colorWhite">#ffffff</color>
+    <color name="colorBlue">#8c1aff</color>
+    <color name="colorBlack">#000000</color>
+    <color name="colorGrayLight">#85D9D9D9</color>
+    <color name="colorGrayDark">#5d5d5d</color>
+    <!--<color name="colorGrayDark">#e2e1f0</color>-->
+    <color name="colorGrayFaint">#999999</color>
+    <color name="colorYellow">#fffc00</color>
+    <color name="colorFaintGray">#f9f9f9</color>
+    <color name="colorTransparentBlack">#5C000000</color>
+
+    <color name="colorGreen">#2EF079</color>
+    <color name="colorBlueOr">#0D55E7</color>
+
+    <color name="colorToolbar">#e2e1f0</color>
+</resources>

@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activity.EnterMobileNumberActivity"
+    android:orientation="vertical"
+
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="2"
+        android:background="@drawable/enter_mobile_number">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.5"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            >
+            <View
+                android:layout_width="0dp"
+                android:layout_weight="0.4"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"/>
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_weight="1.6"
+                android:layout_margin="30dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/logo"
+                android:layout_gravity="end|center"/>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1.1"
+            android:orientation="vertical"
+            android:weightSum="5"
+            >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2"
+                android:orientation="vertical"
+                >
+                <ImageView
+                    android:layout_width="80dp"
+                    android:layout_height="100dp"
+                    android:layout_marginStart="60dp"
+                    android:layout_marginLeft="60dp"
+                    android:src="@drawable/mobile"
+                    android:layout_gravity="start"/>
+            </LinearLayout>
+ <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                >
+                <TextView
+                    android:id="@+id/optTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_gravity="start"
+                    android:textSize="16dp"
+                    android:textColor="@android:color/black"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                >
+              <!--  <EditText
+                    android:id="@+id/edtCountryChange"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:padding="5dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:textColor="@android:color/black"
+                    android:text=" +91"
+                    android:focusable="false"
+                    android:editable="false"
+                    android:clickable="true"
+                    android:background="@android:color/white"
+                    android:drawableLeft="@drawable/countrybackground"
+                    android:layout_gravity="start"/>
+-->
+                <com.rilixtech.widget.countrycodepicker.CountryCodePicker
+                    android:id="@+id/ccp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginLeft="20dp"
+                    app:ccp_defaultNameCode="IN"
+                    app:ccp_hideNameCode="true"
+                    android:background="@android:color/white"
+                    />
+                <EditText
+                    android:id="@+id/edtMobileNumner"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:padding="5dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginEnd="20dp"
+                    android:textSize="15dp"
+                    android:lines="1"
+                    android:singleLine="true"
+                    android:inputType="numberDecimal"
+                    android:layout_marginRight="60dp"
+                    android:maxLength="10"
+                    android:hint="Enter your mobile number"
+                    android:textColor="@android:color/black"
+                    android:background="@color/edtColor"
+                    android:layout_gravity="start"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                >
+
+                <com.prometteur.myevents.Utils.ButtonCustomFont
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="80dp"
+                    android:layout_marginRight="80dp"
+                    android:layout_gravity="end"
+                    android:id="@+id/btnSendOTP"
+                    android:textSize="16sp"
+                    android:text="     SEND OTP     "
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black"
+                    android:background="@drawable/red_round_button"
+                    android:padding="5dp"
+                    android:elevation="6dp"
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.4"
+            android:orientation="vertical"
+            />
+
+
+    </LinearLayout>
+
+</LinearLayout>

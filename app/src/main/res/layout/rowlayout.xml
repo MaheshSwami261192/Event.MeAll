@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    android:background="@android:color/transparent"
+    app:cardBackgroundColor="@android:color/transparent"
+    android:orientation="vertical">
+    <!--
+    grid items for RecyclerView
+    -->
+
+    <RelativeLayout
+        android:id="@+id/viewBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
+        android:visibility="gone"
+        android:orientation="horizontal">
+<ImageView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:src="@mipmap/ic_back_recycler"/>
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/viewForeground"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <LinearLayout
+        android:id="@+id/llLeft"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:weightSum="2">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.6"
+            android:background="@android:color/transparent"
+            android:orientation="vertical">
+
+            <androidx.cardview.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@android:color/transparent"
+                android:orientation="horizontal"
+                app:cardBackgroundColor="@color/colorWhite"
+                app:cardCornerRadius="6dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:elevation="2dp"
+                        android:orientation="horizontal">
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/imgEventPhotoUploaderLeft"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginBottom="2dp"
+                            android:src="@drawable/default_profile" />
+
+                        <TextView
+                            android:id="@+id/txtEventPhotoUploaderName"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center|start"
+                            android:layout_marginStart="5dp"
+                            android:gravity="center|start"
+                            android:text="John Doe"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="14dp" />
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="160dp"
+                        android:layout_gravity="center"
+                        android:layout_margin="5dp">
+
+                        <ImageView
+                            android:id="@+id/eventImageLeft"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop"
+                            android:src="@mipmap/ic_launcher" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_alignParentBottom="true"
+                            android:background="@color/colorTransparentBlack"
+                            android:elevation="2dp"
+                            android:orientation="horizontal"
+                            android:weightSum="2">
+
+                            <LinearLayout
+                                android:id="@+id/linLikeLeft"
+                                android:layout_width="0dp"
+                                android:layout_weight="0.8"
+                                android:layout_gravity="center|start"
+                                android:layout_marginStart="5dp"
+                                android:gravity="center|start"
+                                android:layout_height="match_parent">
+                                <ImageView
+                                    android:layout_width="25dp"
+                                    android:layout_height="26dp"
+                                    android:layout_gravity="center"
+                                    android:background="@drawable/circular_gray_background"
+                                    android:padding="4dp"
+                                    android:src="@mipmap/ic_like" />
+
+                                <TextView
+                                    android:id="@+id/eventLikes"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginStart="5dp"
+                                    android:layout_gravity="center|start"
+                                    android:gravity="center|start"
+                                    android:text="10"
+                                    android:textColor="@color/colorWhite"
+                                    android:textSize="12dp"
+                                    android:textStyle="bold" />
+
+                            </LinearLayout>
+
+
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_weight="1.2"
+                                android:layout_gravity="center|start"
+                                android:gravity="center|start"
+                                android:layout_height="match_parent">
+                                <ImageView
+                                    android:layout_width="25dp"
+                                    android:layout_height="26dp"
+                                    android:layout_gravity="center"
+                                    android:background="@drawable/circular_gray_background"
+                                    android:padding="4dp"
+                                    android:src="@mipmap/ic_comments" />
+
+                                <TextView
+                                    android:id="@+id/eventComments"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="center|start"
+                                    android:layout_marginStart="5dp"
+                                    android:gravity="center|start"
+                                    android:text="+10 Comments"
+                                    android:textColor="@color/colorWhite"
+                                    android:textSize="12dp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+
+
+                        </LinearLayout>
+
+                    </RelativeLayout>
+
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="0.4"
+            android:background="@android:color/transparent"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/txtImgTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/rounded_textview"
+                android:gravity="center"
+                android:text="10:15 PM"
+                android:textColor="@color/colorWhite"
+                android:textSize="12dp" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llRight"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="0.4"
+            android:background="@android:color/transparent"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/txtImgTimeRight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/rounded_textview"
+                android:gravity="center"
+                android:text="10:15 PM"
+                android:textColor="@color/colorWhite"
+                android:textSize="12dp" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.6"
+            android:background="@android:color/transparent"
+            android:orientation="vertical">
+
+            <androidx.cardview.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@android:color/transparent"
+                android:orientation="horizontal"
+                app:cardBackgroundColor="@color/colorWhite"
+                app:cardCornerRadius="6dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:elevation="2dp"
+                        android:orientation="horizontal">
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/imgEventPhotoUploaderRight"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginBottom="2dp"
+                            android:src="@drawable/default_profile" />
+
+                        <TextView
+                            android:id="@+id/txtEventPhotoUploaderNameRight"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center|start"
+                            android:layout_marginStart="5dp"
+                            android:gravity="center|start"
+                            android:text="John Doe"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="14dp" />
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="160dp"
+                        android:layout_gravity="center"
+                        android:layout_margin="5dp">
+
+                        <ImageView
+                            android:id="@+id/eventImageRight"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop"
+                            android:src="@mipmap/ic_launcher" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_alignParentBottom="true"
+                            android:background="@color/colorTransparentBlack"
+                            android:elevation="2dp"
+                            android:orientation="horizontal"
+                            android:weightSum="2">
+
+                            <LinearLayout
+                                android:id="@+id/linLikeRight"
+                                android:layout_width="0dp"
+                                android:layout_weight="0.8"
+                                android:layout_gravity="center|start"
+                                android:layout_marginStart="5dp"
+                                android:gravity="center|start"
+                                android:layout_height="match_parent">
+                                <ImageView
+                                    android:layout_width="25dp"
+                                    android:layout_height="26dp"
+                                    android:layout_gravity="center"
+                                    android:background="@drawable/circular_gray_background"
+                                    android:padding="4dp"
+                                    android:src="@mipmap/ic_like" />
+
+                                <TextView
+                                    android:id="@+id/eventLikesRight"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginStart="5dp"
+                                    android:layout_gravity="center|start"
+                                    android:gravity="center|start"
+                                    android:text="10"
+                                    android:textColor="@color/colorWhite"
+                                    android:textSize="12dp"
+                                    android:textStyle="bold" />
+
+                            </LinearLayout>
+
+
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_weight="1.2"
+                                android:layout_gravity="center|start"
+                                android:gravity="center|start"
+                                android:layout_height="match_parent">
+                                <ImageView
+                                    android:layout_width="25dp"
+                                    android:layout_height="26dp"
+                                    android:layout_gravity="center"
+                                    android:background="@drawable/circular_gray_background"
+                                    android:padding="4dp"
+                                    android:src="@mipmap/ic_comments" />
+
+                                <TextView
+                                    android:id="@+id/eventCommentsRight"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="center|start"
+                                    android:layout_marginStart="5dp"
+                                    android:gravity="center|start"
+                                    android:text="+10 Comments"
+                                    android:textColor="@color/colorWhite"
+                                    android:textSize="12dp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+
+
+                        </LinearLayout>
+
+                    </RelativeLayout>
+
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+    </RelativeLayout>
+</FrameLayout>
