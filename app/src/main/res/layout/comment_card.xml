@@ -65,11 +65,9 @@
                         android:id="@+id/txtYellowMessageText"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
                         android:layout_gravity="top|start"
                         android:gravity="top|start"
                         android:layout_weight="0.7"
-                        android:layout_marginEnd="-25dp"
                         android:background="@drawable/chat_yellow_background"
                         android:paddingLeft="10dp"
                         android:paddingBottom="10dp"
@@ -80,8 +78,9 @@
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/imgYellowMessageProfile"
                         android:layout_width="0dp"
-                        android:layout_height="30dp"
+                        android:layout_height="35dp"
                         android:layout_weight="0.1"
+                        android:layout_gravity="center"
                         android:elevation="5dp"
                         android:src="@drawable/default_profile" />
                 </LinearLayout>
@@ -124,9 +123,9 @@
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/imgGaryMessageProfile"
                         android:layout_width="0dp"
-                        android:layout_height="30dp"
-                        android:layout_marginEnd="-50dp"
+                        android:layout_height="35dp"
                         android:layout_weight="0.1"
+                        android:layout_gravity="center"
                         android:elevation="5dp"
                         android:src="@drawable/default_profile" />
 
@@ -135,9 +134,6 @@
                         android:layout_width="0dp"
                         android:layout_weight="0.7"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="25dp"
-                        android:layout_marginLeft="25dp"
-                        android:layout_marginTop="15dp"
                         android:background="@drawable/chat_gray_background"
                         android:layout_gravity="top|start"
                         android:gravity="top|start"

@@ -17,7 +17,9 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -30,6 +32,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
@@ -49,9 +52,11 @@ import java.util.List;
 
 import dmax.dialog.SpotsDialog;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements    SwipeRefreshLayout.OnRefreshListener ,NavigationView.OnNavigationItemSelectedListener {
     FloatingActionButton fabAddNewEvent;
-    String userName = "";
+    String userName = "",mobile="",
+    nameRealname="",
+            userPhoto=""   ;
     String TAG = MainActivity.class.getSimpleName();
     ArrayList<EventClassFirebase> arrayMainEvents = new ArrayList<>();
     ArrayList<EventClassFirebase> mainSendArrayMainEvents = new ArrayList<>();
@@ -65,10 +70,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     boolean doubleBackToExitPressedOnce = false;
     private List<Event> eventList = new ArrayList<>();
     private RecyclerView recyclerView;
+    SwipeRefreshLayout mSwipeRefreshLayout;
     private EventAdapter mAdapter;
     private DatabaseReference mFirebaseDatabase;
     private FirebaseDatabase mFirebaseInstance;
     SharedPreferences preferences;
+
+    ImageView imgDrawerProfile;
+    TextView txtDrawerName,txtDrawerUserName;
     NavigationView navigationView;
     public static void hideKeyboard(Activity activity) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
@@ -91,6 +100,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         attributes.layoutInDisplayCutoutMode=WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;*/
         //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
+
+
+
         context = this;
         spotsDialog = new SpotsDialog(this);
         toolbar = findViewById(R.id.toolbar);
@@ -99,7 +111,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 this, drawer, toolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         toggle.setDrawerIndicatorEnabled(false);
-        toggle.setHomeAsUpIndicator(R.drawable.four_dots_24);
+        toggle.setHomeAsUpIndicator(R.mipmap.ic_drawer_icon);
+
         /*toggle.setDrawerIndicatorEnabled(false);
         Drawable drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.four_dots, getTheme());
         toggle.setHomeAsUpIndicator(drawable);
@@ -214,10 +227,89 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fabAddNewEvent = findViewById(R.id.fabAddNewEvent);
 
 
-         preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorBlue,
+                R.color.colorBlue,
+                R.color.colorBlue,
+                R.color.colorYellow);
+
+
+
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+         if(preferences.contains("userName"))
         userName = preferences.getString("userName", "");
+        if(preferences.contains("mobile"))
+            mobile       = preferences.getString("mobile", "");
+        if(preferences.contains("nameRealname"))
+            nameRealname = preferences.getString("nameRealname", "");
+        if(preferences.contains("userPhoto"))
+            userPhoto    = preferences.getString("userPhoto", "");
 
 
+
+    }
+
+    @Override
+    public void onRefresh() {
+
+        // Fetching data from server
+        spotsDialog.show();
+        mFirebaseDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                mainSendArrayMainEvents = new ArrayList<>();
+                arrayMainEvents = new ArrayList<>();
+
+                mSwipeRefreshLayout.setRefreshing(false);
+
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    try {
+
+                        EventClassFirebase eventClassFirebase = snapshot.getValue(EventClassFirebase.class);
+                        eventClassFirebase.setEventKey(snapshot.getKey());
+                        arrayMainEvents.add(eventClassFirebase);
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+
+                for (int i = arrayMainEvents.size()-1; i >=0; i--) {
+                    if(arrayMainEvents.get(i).getEventInvitees()!=null) {
+                        if (arrayMainEvents.get(i).getEventInvitees().contains(userName) || arrayMainEvents.get(i).getEventCreatorUserName().contains(userName)) {
+                            mainSendArrayMainEvents.add(arrayMainEvents.get(i));
+                        }
+                    }
+                }/*for (int i = 0; i < arrayMainEvents.size(); i++) {
+                    if (arrayMainEvents.get(i).getEventInvitees().contains(userName) || arrayMainEvents.get(i).getEventCreatorUserName().contains(userName)) {
+                        mainSendArrayMainEvents.add(arrayMainEvents.get(i));
+                    }
+                }*/
+
+                mAdapter = new EventAdapter(mainSendArrayMainEvents, MainActivity.this);
+                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+                recyclerView.setLayoutManager(mLayoutManager);
+                recyclerView.setItemAnimator(new DefaultItemAnimator());
+                recyclerView.setAdapter(mAdapter);
+
+                if (null != spotsDialog && spotsDialog.isShowing()) {
+                    spotsDialog.dismiss();
+                }
+                if (arrayMainEvents.size() == 0) {
+                    Toast.makeText(context, "No any event found", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.e(TAG, "Failed to read user", error.toException());
+            }
+
+
+        });
     }
 
     private void onClicks() {
@@ -283,7 +375,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, AddNewEventActivity.class);
                 startActivity(intent);
-                finish();
+                //finish();
             }
         });
 
@@ -375,5 +467,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 drawer.closeDrawer(GravityCompat.START);
             }
         });
+
+
+        imgDrawerProfile = headerLayout.findViewById(R.id.imgDrawerProfile);
+        txtDrawerName = headerLayout.findViewById(R.id.txtDrawerName);
+        txtDrawerUserName =headerLayout. findViewById(R.id.txtDrawerUserName);
+
+
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        if(preferences.contains("userName"))
+            userName = preferences.getString("userName", "");
+        if(preferences.contains("mobile"))
+            mobile       = preferences.getString("mobile", "");
+        if(preferences.contains("nameRealname"))
+            nameRealname = preferences.getString("nameRealname", "");
+        if(preferences.contains("userPhoto"))
+            userPhoto    = preferences.getString("userPhoto", "");
+
+        txtDrawerName.setText(nameRealname);
+        txtDrawerUserName.setText(userName);
+
     }
 }

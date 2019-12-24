@@ -27,7 +27,9 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.Continuation;
@@ -71,6 +73,8 @@ public class UserDetailsActivity extends AppCompatActivity {
     CircleImageView imgPickGallary, imgProfile, imgPickCamera;
 
 
+    RadioButton rbMale, rbFemale, rbOther;
+
     private static int IMG_RESULT = 1;
     String ImageDecode;
     Intent intent;
@@ -82,12 +86,13 @@ public class UserDetailsActivity extends AppCompatActivity {
     public static final int REQUEST_ID_MULTIPLE_PERMISSIONS = 1;
 
     SpotsDialog spotsDialog;
-    String userName="";
-    boolean userNameVerified=false;
+    String userName = "";
+    boolean userNameVerified = false;
     FirebaseUser currentFirebaseUser;
 
-    SharedPreferences preferences ;
-            SharedPreferences.Editor editor;
+    SharedPreferences preferences;
+    SharedPreferences.Editor editor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -96,7 +101,7 @@ public class UserDetailsActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_user_details);
         checkAndRequestPermissions();
-        currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
+        currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         initValues();
         onClicks();
 
@@ -106,7 +111,7 @@ public class UserDetailsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        editor.putBoolean("restrictRedirectionToVerify",true);
+        editor.putBoolean("restrictRedirectionToVerify", true);
         editor.apply();
     }
 
@@ -120,11 +125,47 @@ public class UserDetailsActivity extends AppCompatActivity {
         imgProfile = findViewById(R.id.imgProfile);
         imgPickCamera = findViewById(R.id.imgPickCamera);
 
+
+        rbMale = findViewById(R.id.rbMale);
+        rbFemale = findViewById(R.id.rbFemale);
+        rbOther = findViewById(R.id.rbOther);
+
+
+        rbMale.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    rbFemale.setChecked(false);
+                    rbOther.setChecked(false);
+                }
+            }
+        });
+
+        rbFemale.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    rbMale.setChecked(false);
+                    rbOther.setChecked(false);
+                }
+            }
+        });
+        rbOther.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    rbMale.setChecked(false);
+                    rbFemale.setChecked(false);
+                }
+            }
+        });
+
+
         Intent intent1 = getIntent();
         mobile = intent1.getStringExtra("mobile");
         preferences = PreferenceManager.getDefaultSharedPreferences(UserDetailsActivity.this);
         editor = preferences.edit();
-        editor.putBoolean("restrictRedirectionToVerify",true);
+        editor.putBoolean("restrictRedirectionToVerify", true);
         editor.apply();
         edtFirstName.addTextChangedListener(new TextWatcher() {
             @Override
@@ -137,25 +178,24 @@ public class UserDetailsActivity extends AppCompatActivity {
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
-                        if (s.toString().length() > 0 )
-                        {
+                        if (s.toString().length() > 0) {
                             final int min = 0;
                             final int max = 1000;
                             final int random = new Random().nextInt((max - min) + 1) + min;
 
-                            final String key=s.toString() + edtLastName.getText().toString().substring(0, edtLastName.getText().toString().length())+random;
+                            final String key = s.toString() + edtLastName.getText().toString().substring(0, edtLastName.getText().toString().length()) + random;
 
                             mFirebaseDatabase.orderByKey().equalTo(key).addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
 
-                                    if(dataSnapshot.exists()) {
+                                    if (dataSnapshot.exists()) {
                                         edtUserName.setError("User nameRealname already taken");
                                         edtUserName.setText(key);
-                                        userNameVerified=false;
+                                        userNameVerified = false;
                                     } else {
                                         edtUserName.setText(key);
-                                        userNameVerified=true;
+                                        userNameVerified = true;
                                         edtUserName.setError(null);
 
                                     }
@@ -192,23 +232,22 @@ public class UserDetailsActivity extends AppCompatActivity {
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
-                        if (s.toString().length() > 0 )
-                        {
+                        if (s.toString().length() > 0) {
                             final int min = 0;
                             final int max = 1000;
                             final int random = new Random().nextInt((max - min) + 1) + min;
 
-                            final String key=edtFirstName.getText().toString() + s.toString().substring(0, s.toString().length())+random;
+                            final String key = edtFirstName.getText().toString() + s.toString().substring(0, s.toString().length()) + random;
                             mFirebaseDatabase.orderByKey().equalTo(key).addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
 
-                                    if(dataSnapshot.exists()) {
-                                        userNameVerified=false;
+                                    if (dataSnapshot.exists()) {
+                                        userNameVerified = false;
                                         edtUserName.setText(key);
                                         edtUserName.setError("User nameRealname already taken");
                                     } else {
-                                        userNameVerified=true;
+                                        userNameVerified = true;
                                         edtUserName.setText(key);
                                         edtUserName.setError(null);
                                     }
@@ -253,24 +292,23 @@ public class UserDetailsActivity extends AppCompatActivity {
             public void onClick(View v) {
 
 
-
                 String firstName = edtFirstName.getText().toString();
                 String lastName = edtLastName.getText().toString();
-                userName= edtUserName.getText().toString().trim();
+                userName = edtUserName.getText().toString().trim();
                 String mobileNumber = mobile;
 
                 if (!firstName.equals("")) {
                     if (!lastName.equals("")) {
-                    if (!userName.equals("") && userNameVerified) {
+                        if (!userName.equals("") && userNameVerified) {
 
-                        editor.putBoolean("restrictRedirection",true);
-                        editor.apply();
+                            editor.putBoolean("restrictRedirection", true);
+                            editor.apply();
                             createUser(firstName, lastName, userName, mobileNumber);
 
-                    } else {
-                        edtUserName.setError("User nameRealname already taken");
-                        Toast.makeText(UserDetailsActivity.this, "User nameRealname already taken", Toast.LENGTH_SHORT).show();
-                    }
+                        } else {
+                            edtUserName.setError("User nameRealname already taken");
+                            Toast.makeText(UserDetailsActivity.this, "User nameRealname already taken", Toast.LENGTH_SHORT).show();
+                        }
                     } else {
                         edtLastName.setError("Enter Last Name");
                     }
@@ -301,7 +339,12 @@ public class UserDetailsActivity extends AppCompatActivity {
                 intent = new Intent(Intent.ACTION_PICK,
                         android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 
-                startActivityForResult(intent, IMG_RESULT);
+                try {
+                    startActivityForResult(intent, IMG_RESULT);
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -415,7 +458,7 @@ public class UserDetailsActivity extends AppCompatActivity {
         spotsDialog.show();
 
 
-        final String userAuthKey =currentFirebaseUser.getUid();
+        final String userAuthKey = currentFirebaseUser.getUid();
 
 
         if (null != URI) {
@@ -438,7 +481,7 @@ public class UserDetailsActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<Uri> task) {
                     if (task.isSuccessful()) {
                         final String photo = task.getResult().toString();
-                        final User user = new User(firstName, lastName, mobileNumber, photo,userName,userAuthKey);
+                        final User user = new User(firstName, lastName, mobileNumber, photo, userName, userAuthKey);
                         mFirebaseDatabase.child(userName).setValue(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
@@ -449,14 +492,12 @@ public class UserDetailsActivity extends AppCompatActivity {
 
                                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(UserDetailsActivity.this);
                                 SharedPreferences.Editor editor = preferences.edit();
-                                editor.putString("userName",userName);
-                                editor.putString("mobile",mobileNumber);
-                                editor.putString("nameRealname",firstName+" "+lastName);
-                                editor.putString("userPhoto",photo);
-                                editor.putBoolean("restrictRedirectionToVerify",false);
+                                editor.putString("userName", userName);
+                                editor.putString("mobile", mobileNumber);
+                                editor.putString("nameRealname", firstName + " " + lastName);
+                                editor.putString("userPhoto", photo);
+                                editor.putBoolean("restrictRedirectionToVerify", false);
                                 editor.apply();
-
-
 
 
                                 Toast.makeText(UserDetailsActivity.this, "Registered Successfully", Toast.LENGTH_SHORT).show();
@@ -472,10 +513,9 @@ public class UserDetailsActivity extends AppCompatActivity {
                     }
                 }
             });
-        }else {
+        } else {
 
-            final User user = new User(firstName, lastName, mobileNumber, "",userName,userAuthKey);
-
+            final User user = new User(firstName, lastName, mobileNumber, "", userName, userAuthKey);
 
 
             mFirebaseDatabase.child(userName).setValue(user).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -486,12 +526,11 @@ public class UserDetailsActivity extends AppCompatActivity {
                     }
                     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(UserDetailsActivity.this);
                     SharedPreferences.Editor editor = preferences.edit();
-                    editor.putString("userName",userName);
-                    editor.putString("mobile",mobileNumber);
-                    editor.putString("nameRealname",firstName+" "+lastName);
-                    editor.putString("userPhoto","");
+                    editor.putString("userName", userName);
+                    editor.putString("mobile", mobileNumber);
+                    editor.putString("nameRealname", firstName + " " + lastName);
+                    editor.putString("userPhoto", "");
                     editor.apply();
-
 
 
                     Toast.makeText(UserDetailsActivity.this, "Registered Successfully", Toast.LENGTH_SHORT).show();
@@ -531,9 +570,7 @@ public class UserDetailsActivity extends AppCompatActivity {
                 Log.e(TAG, "User data is changed!" + user.firstName + ", " + user.lastName);
 
 
-
                 Log.e(TAG, "" + user.firstName + ", " + user.lastName);
-
 
 
             }

@@ -12,7 +12,7 @@
         android:id="@+id/linAlphaBlock"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorGrayFaint"
+        android:background="@drawable/background"
         android:orientation="vertical"
         tools:context=".Activity.MainActivity">
 
@@ -73,8 +73,8 @@
                         android:id="@+id/imgSwitchGallaryToTimeline"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:padding="12dp"
-                        android:src="@drawable/gallery" />
+                        android:padding="5dp"
+                        android:src="@mipmap/ic_gallary" />
 
                 </LinearLayout>
 

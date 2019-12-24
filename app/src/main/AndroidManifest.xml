@@ -43,13 +43,14 @@
         <activity android:name=".Activity.AllEventImagesDisplayActivity" />
         <activity
             android:name=".Activity.ContactListActivity"
-            />
+            android:launchMode="singleTask"  />
         <activity
             android:name=".Activity.AddNewEventActivity"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".Activity.UserDetailsActivity"
-            android:windowSoftInputMode="adjustPan" />
+            android:launchMode="singleTask"  android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".Activity.MainActivity"
             android:windowSoftInputMode="stateHidden" />
@@ -59,6 +60,7 @@
         <activity
             android:name=".Activity.EnterMobileNumberActivity"
             android:windowSoftInputMode="adjustPan">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

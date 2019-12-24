@@ -3,11 +3,14 @@ package com.prometteur.myevents.Adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -55,6 +58,16 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.MyViewHolder
         holder.llTwoImage.setVisibility(View.GONE);
         holder.llThreeImage.setVisibility(View.GONE);
         holder.llFourImage.setVisibility(View.GONE);
+
+
+
+        holder.eventOptions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showEditDeleteMenu(v);
+            }
+        });
+
 
         ArrayList<EventImageFirebase> eventImagesList = new ArrayList<>();
         eventImagesList = event.getEventImages();
@@ -367,7 +380,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.MyViewHolder
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView eventTitle, eventDate, eventTime, eventCreatorName, eventLocation;
-        ImageView imgEventCreatorProfile;
+        ImageView imgEventCreatorProfile,eventOptions;
         RelativeLayout rlDefaultImage;
 
         LinearLayout llOneImage, llTwoImage, llThreeImage, llFourImage;
@@ -385,6 +398,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.MyViewHolder
             eventLocation = (TextView) view.findViewById(R.id.eventLocation);
             eventCreatorName = (TextView) view.findViewById(R.id.eventCreatorName);
             imgEventCreatorProfile = view.findViewById(R.id.imgEventCreatorProfile);
+            eventOptions = view.findViewById(R.id.eventOptions);
             rlDefaultImage = view.findViewById(R.id.rlDefaultImage);
 
             llOneImage = view.findViewById(R.id.llOneImage);
@@ -409,5 +423,26 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.MyViewHolder
 
 
         }
+    }
+
+    public void showEditDeleteMenu (View view)
+    {
+        PopupMenu menu = new PopupMenu (mContext, view);
+        menu.setOnMenuItemClickListener (new PopupMenu.OnMenuItemClickListener ()
+        {
+            @Override
+            public boolean onMenuItemClick (MenuItem item)
+            {
+                int id = item.getItemId();
+                switch (id)
+                {
+                    case R.id.item_settings: Log.i ("Tag", "Edit"); break;
+                    case R.id.item_about: Log.i ("Tag", "Delete"); break;
+                }
+                return true;
+            }
+        });
+        menu.inflate (R.menu.edit_delete_menu_layout);
+        menu.show();
     }
 }

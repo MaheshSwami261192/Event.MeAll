@@ -7,9 +7,12 @@ import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -122,6 +125,7 @@ public class MobileVerificationActivity extends AppCompatActivity {
         sendVerificationCode(mobile);
         ccp = (CountryCodePicker) findViewById(R.id.ccpVerify);
         ccp.setDefaultCountryUsingPhoneCode(Integer.parseInt(countryCode.replace("+","")));
+        ccp.setClickable(false);
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         edit=preferences.edit();
 
@@ -351,6 +355,34 @@ public class MobileVerificationActivity extends AppCompatActivity {
             }
         });
 
+
+        edtOTPSix.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
+
+                    String code = edtOTPOne.getText().toString().trim()
+                            + edtOTPTwo.getText().toString().trim()
+                            + edtOTPThree.getText().toString().trim()
+                            + edtOTPFour.getText().toString().trim()
+                            + edtOTPFive.getText().toString().trim()
+                            + edtOTPSix.getText().toString().trim();
+                    if (code.isEmpty() || code.length() < 6) {
+                        edtOTPSix.setError("Enter valid code");
+                        edtOTPSix.requestFocus();
+                    } else {
+                   /* Intent intent = new Intent(MobileVerificationActivity.this, UserDetailsActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.putExtra("mobile",mobile);
+                    startActivity(intent);*/
+                        verifyVerificationCode(code);
+
+                    }
+
+                }
+                return false;
+            }
+        });
 
         btnVerify.setOnClickListener(new View.OnClickListener() {
             @Override

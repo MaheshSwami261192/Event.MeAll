@@ -107,6 +107,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginLeft="20dp"
                     app:ccp_defaultNameCode="IN"
+                    android:clickable="false"
                     app:ccp_hideNameCode="true"
                     android:background="@android:color/white"
                     />

@@ -24,9 +24,11 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.loader.content.CursorLoader;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
@@ -51,7 +53,7 @@ import static com.prometteur.myevents.Activity.EventDetailsActivity.contactToInv
 import static com.prometteur.myevents.Activity.EventDetailsActivity.oldlistContact;
 import static com.prometteur.myevents.Activity.EventDetailsActivity.oldlistContactForUniqe;
 
-public class ContactListActivity extends AppCompatActivity {
+public class ContactListActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener  {
     public static final int RequestPermissionCode = 1;
     public static final int REQUEST_ID_MULTIPLE_PERMISSIONS = 1;
     final ArrayList<User> arrayListUser = new ArrayList<>();
@@ -72,6 +74,9 @@ public class ContactListActivity extends AppCompatActivity {
     private DatabaseReference mFirebaseDatabase;
     private FirebaseDatabase mFirebaseInstance;
     ArrayList<String> invitedContacts;
+    SwipeRefreshLayout mSwipeRefreshLayout;
+    public static final int MY_PERMISSIONS_REQUEST_SEND_SMS = 1212;
+
 
     public static void hideKeyboard(Activity activity) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
@@ -93,11 +98,37 @@ public class ContactListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_contact_list);
         context = this;
         spotsDialog = new SpotsDialog(this);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorBlue,
+                R.color.colorBlue,
+                R.color.colorBlue,
+                R.color.colorYellow);
+
+
+
+        if (ContextCompat.checkSelfPermission(ContactListActivity.this,
+                Manifest.permission.SEND_SMS)
+                != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(ContactListActivity.this,
+                    Manifest.permission.SEND_SMS)) {
+            } else {
+                ActivityCompat.requestPermissions(ContactListActivity.this,
+                        new String[]{Manifest.permission.SEND_SMS,Manifest.permission.READ_PHONE_STATE},
+                        MY_PERMISSIONS_REQUEST_SEND_SMS);
+            }
+        }
+
+
+
+
+
         initValues();
         onClicks();
     }
 
     private void initValues() {
+
         mFirebaseInstance = FirebaseDatabase.getInstance();
 
         mFirebaseDatabase = mFirebaseInstance.getReference("users");
@@ -112,6 +143,18 @@ public class ContactListActivity extends AppCompatActivity {
         rvContactList = findViewById(R.id.rvContactList);
         tvEmpty = findViewById(R.id.tvEmpty);
 
+
+        GetContactsIntoArrayList();
+        /*mSwipeRefreshLayout.post(new Runnable() {
+
+            @Override
+            public void run() {
+
+                mSwipeRefreshLayout.setRefreshing(true);
+                GetContactsIntoArrayList();
+            }
+        });
+*/
 
         try {
             invitedContacts = getIntent().getStringArrayListExtra("invitedContacts");
@@ -135,8 +178,6 @@ public class ContactListActivity extends AppCompatActivity {
         llSearch.setVisibility(View.GONE);
         llTitle.setVisibility(View.VISIBLE);
         tvEmpty.setVisibility(View.GONE);
-        checkAndRequestPermissions();
-
 
         edtSearch.addTextChangedListener(new TextWatcher() {
             @Override
@@ -244,6 +285,12 @@ public class ContactListActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onRefresh() {
+
+        // Fetching data from server
+        GetContactsIntoArrayList();
+    }
     private void onClicks() {
         btnDone.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -302,7 +349,15 @@ public class ContactListActivity extends AppCompatActivity {
 
     }
 
-    private boolean checkAndRequestPermissions() {
+
+    // public ArrayList<String> arrContactList = new ArrayList<>();
+    public void GetContactsIntoArrayList() {
+        if (!isFinishing()) {
+           spotsDialog.show();
+
+        }
+
+
         int contact = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS);
         List<String> listPermissionsNeeded = new ArrayList<>();
 
@@ -313,18 +368,22 @@ public class ContactListActivity extends AppCompatActivity {
         if (!listPermissionsNeeded.isEmpty()) {
             ActivityCompat.requestPermissions(this, listPermissionsNeeded.toArray
                     (new String[listPermissionsNeeded.size()]), REQUEST_ID_MULTIPLE_PERMISSIONS);
-            return false;
         } else {
-            GetContactsIntoArrayList();
-        }
-        return true;
-    }
 
-    // public ArrayList<String> arrContactList = new ArrayList<>();
-    public void GetContactsIntoArrayList() {
-        if (!isFinishing()) {
-            spotsDialog.show();
-        }
+            String[] PROJECTION = new String[] {
+                    ContactsContract.CommonDataKinds.Phone.CONTACT_ID,
+                    ContactsContract.Contacts.DISPLAY_NAME,
+                    ContactsContract.CommonDataKinds.Phone.NUMBER };
+            CursorLoader cursorLoader = new CursorLoader(context,
+                    ContactsContract.CommonDataKinds.Phone.CONTENT_URI, PROJECTION,
+                    null, null, "UPPER(" + ContactsContract.Contacts.DISPLAY_NAME
+                    + ")ASC");
+
+            cursor= cursorLoader.loadInBackground();
+
+
+
+
         cursor = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
         if (null != cursor) {
             // AddNewEventActivity.arrNewList.clear();
@@ -349,7 +408,7 @@ public class ContactListActivity extends AppCompatActivity {
                         Contact contact1 = new Contact(name, phonenumber, "");
                         if (invitedContacts != null) {
                             if (!invitedContacts.contains(phonenumber)) {
-                                if(!contactToInviteListForUnique.contains(phonenumber)) {
+                                if (!contactToInviteListForUnique.contains(phonenumber)) {
                                     for (int i = 0; i < arrayListUser.size(); i++) {
                                         String mobileNumber = "";
                                         if (null != arrayListUser.get(i).getMobileNumber()) {
@@ -359,10 +418,9 @@ public class ContactListActivity extends AppCompatActivity {
                                         String userName = arrayListUser.get(i).getUserName();
                                         phonenumber = phonenumber.replace(" ", "").replace("-", "");
                                         if (mobileNumber.contains(phonenumber)) {
-                                            //contact1.setSubname(arrayListUser.get(i).getUserName());
+                                            contact1.setSubname(arrayListUser.get(i).getUserName());
                                             contact1.setUserName(userName);
-                                        }else if (phonenumber.contains(mobileNumber))
-                                        {
+                                        } else if (phonenumber.contains(mobileNumber)) {
                                             contact1.setUserName(userName);
                                         }
                                     }
@@ -371,9 +429,8 @@ public class ContactListActivity extends AppCompatActivity {
                                 }
 
 
-                            }else
-                            {
-                                if(!oldlistContactForUniqe.contains(phonenumber)) {
+                            } else {
+                                if (!oldlistContactForUniqe.contains(phonenumber)) {
                                     for (int i = 0; i < arrayListUser.size(); i++) {
                                         String mobileNumber = "";
                                         if (null != arrayListUser.get(i).getMobileNumber()) {
@@ -383,10 +440,9 @@ public class ContactListActivity extends AppCompatActivity {
                                         String userName = arrayListUser.get(i).getUserName();
                                         phonenumber = phonenumber.replace(" ", "").replace("-", "");
                                         if (mobileNumber.contains(phonenumber)) {
-                                            //contact1.setSubname(arrayListUser.get(i).getUserName());
+                                            contact1.setSubname(arrayListUser.get(i).getUserName());
                                             contact1.setUserName(userName);
-                                        }else if (phonenumber.contains(mobileNumber))
-                                        {
+                                        } else if (phonenumber.contains(mobileNumber)) {
                                             contact1.setUserName(userName);
                                         }
                                     }
@@ -427,11 +483,11 @@ public class ContactListActivity extends AppCompatActivity {
                     }
                     if (invitedContacts != null) {
                         Collections.sort(contactToInviteList, new CustomComparator());
-                        ArrayList<String> contactListString=new ArrayList<>();
-                        for(Contact contact:contactToInviteList){
+                        ArrayList<String> contactListString = new ArrayList<>();
+                        for (Contact contact : contactToInviteList) {
                             contactListString.add(contact.getSubname());
                         }
-                        mAdapter = new ContactListAdapter(contactToInviteList, ContactListActivity.this,contactListString);
+                        mAdapter = new ContactListAdapter(contactToInviteList, ContactListActivity.this, contactListString);
                         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
                         rvContactList.setLayoutManager(mLayoutManager);
                         rvContactList.setItemAnimator(new DefaultItemAnimator());
@@ -440,12 +496,13 @@ public class ContactListActivity extends AppCompatActivity {
                         llSearch.setVisibility(View.GONE);
                         llTitle.setVisibility(View.VISIBLE);
                         tvEmpty.setVisibility(View.GONE);
-                       // checkAndRequestPermissions();
+                        // checkAndRequestPermissions();
 
-                    }else {
+                    } else {
                         Collections.sort(AddNewEventActivity.arrNewList, new CustomComparator());
                         mAdapter.notifyDataSetChanged();
                     }
+                    mSwipeRefreshLayout.setRefreshing(false);
                     //cursor.close();
 
                     if (null != spotsDialog && spotsDialog.isShowing()) {
@@ -458,13 +515,14 @@ public class ContactListActivity extends AppCompatActivity {
                 @Override
                 public void onCancelled(DatabaseError error) {
                     // Failed to read value
+                    mSwipeRefreshLayout.setRefreshing(false);
                     Log.e(TAG, "Failed to read user", error.toException());
                 }
 
 
             });
 
-
+        }
         }
 
 

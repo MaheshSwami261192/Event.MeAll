@@ -27,7 +27,10 @@ import com.prometteur.myevents.SingletonClasses.EventCommentFirebase;
 import com.prometteur.myevents.SingletonClasses.EventImageFirebase;
 
 import java.lang.reflect.Type;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.MyViewHolder> {
@@ -83,33 +86,30 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.MyView
 
 
         if(userName.equals(comment.getCommentorUserName())) {//This is Left
-            holder.card_right.setVisibility(View.GONE);
-            holder.card_left.setVisibility(View.VISIBLE);
-
-            holder.txtSenderNameGray.setText(""+comment.getCommentorName());
-            holder.txtGrayMessageText.setText(""+comment.getStrComment());
-            holder.txtGrayMessageDate.setText(comment.getCommentDateTime());
-
-            String url1 = comment.getCommentorProfile();
-            if(url1!=null && !url1.isEmpty()) {
-                Glide.with(mContext)
-                        .load(url1)
-                        .into(holder.imgGaryMessageProfile);
-            }else
-            {
-                Glide.with(mContext)
-                        .load(R.drawable.default_profile)
-                        .into(holder.imgGaryMessageProfile);
-            }
-
-        }else {
             holder.card_right.setVisibility(View.VISIBLE);
             holder.card_left.setVisibility(View.GONE);
 
 
             holder.txtSenderNameYellow.setText(""+comment.getCommentorName());
             holder.txtYellowMessageText.setText(""+comment.getStrComment());
-            holder.txtYellowMessageDate.setText(comment.getCommentDateTime());
+
+
+            SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+            SimpleDateFormat format2 = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
+            Date date = null;
+            try {
+                date = format1.parse(comment.getCommentDateTime());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            String dateToSet = format2.format(date);
+
+            String[] splitStr = dateToSet.trim().split("\\s+");
+
+            dateToSet=splitStr[0]+"\n"+splitStr[1]+" "+splitStr[2];
+
+
+            holder.txtYellowMessageDate.setText(dateToSet);
 
             String url1 = comment.getCommentorProfile();
             if(url1!=null && !url1.isEmpty()) {
@@ -122,6 +122,45 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.MyView
                         .load(R.drawable.default_profile)
                         .into(holder.imgYellowMessageProfile);
             }
+
+        }else {
+            holder.card_right.setVisibility(View.GONE);
+            holder.card_left.setVisibility(View.VISIBLE);
+
+            holder.txtSenderNameGray.setText(""+comment.getCommentorName());
+            holder.txtGrayMessageText.setText(""+comment.getStrComment());
+
+
+            SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+            SimpleDateFormat format2 = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
+            Date date = null;
+            try {
+                date = format1.parse(comment.getCommentDateTime());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            String dateToSet = format2.format(date);
+
+
+            String[] splitStr = dateToSet.trim().split("\\s+");
+
+            dateToSet=splitStr[0]+"\n"+splitStr[1]+" "+splitStr[2];
+
+
+            holder.txtGrayMessageDate.setText(dateToSet);
+
+            String url1 = comment.getCommentorProfile();
+            if(url1!=null && !url1.isEmpty()) {
+                Glide.with(mContext)
+                        .load(url1)
+                        .into(holder.imgGaryMessageProfile);
+            }else
+            {
+                Glide.with(mContext)
+                        .load(R.drawable.default_profile)
+                        .into(holder.imgGaryMessageProfile);
+            }
+
         }
 
 

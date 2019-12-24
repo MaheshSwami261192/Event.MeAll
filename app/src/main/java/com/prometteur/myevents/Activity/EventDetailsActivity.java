@@ -41,13 +41,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class EventDetailsActivity extends AppCompatActivity {
     public static ArrayList<Contact> contactToInviteList = new ArrayList<>();
     public static ArrayList<String> contactToInviteListForUnique = new ArrayList<>();
     public static ArrayList<Contact> oldlistContact = new ArrayList<>();
     public static ArrayList<String> oldlistContactForUniqe = new ArrayList<>();
     EventDetailAdapter eventDetailAdapter;
-    ImageView imgContactProfile;
+    CircleImageView imgContactProfile;
     private EventClassFirebase theEvent;
     private TextViewCustomFont tv_eventTitle, tv_Location, tv_addMember, txtContactName, txtContactSubName, tvDateTime;
     private RecyclerView rvContactList;
@@ -208,6 +210,11 @@ public class EventDetailsActivity extends AppCompatActivity {
                                                 contact1.setUserName(arrayListUser.get(i).getUserName());
                                             }
                                         }
+
+
+
+
+
                                         membersDatalist.add(contact1);
                                         membersDatalistString.add(phonenumber);
                                     }
@@ -324,7 +331,9 @@ public class EventDetailsActivity extends AppCompatActivity {
                 tvDateTime.setText("Created by, " + theEvent.getEventCreateDate());
 
                 if (theEvent.getEventCreatorProfile() != null && !theEvent.getEventCreatorProfile().isEmpty()) {
-                    Glide.with(getApplicationContext()).load(theEvent.getEventCreatorProfile()).into(imgContactProfile);
+                    Glide.with(getApplicationContext())
+                            .load(theEvent.getEventCreatorProfile())
+                            .into(imgContactProfile);
                 } else {
                     Glide.with(getApplicationContext()).load(R.drawable.user).into(imgContactProfile);
                 }

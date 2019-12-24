@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -17,9 +18,12 @@ import android.preference.PreferenceManager;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -91,6 +95,8 @@ String strCountryCode="+91";
         mFirebaseDatabase = mFirebaseInstance.getReference("users");
 
         ccp = (CountryCodePicker) findViewById(R.id.ccp);
+
+        ccp.setClickable(false);
         optTextView = findViewById(R.id.optTextView);
 
 
@@ -98,6 +104,12 @@ String strCountryCode="+91";
         btnSendOTP = findViewById(R.id.btnSendOTP);
         edtMobileNumber = findViewById(R.id.edtMobileNumner);
         btnSendOTP.setElevation(6);
+
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
         String steps = "Please enter your mobile number to\nreceive";
         String title = " One Time Password";
 
@@ -112,10 +124,82 @@ String strCountryCode="+91";
         ccp.setOnCountryChangeListener(new CountryCodePicker.OnCountryChangeListener() {
             @Override
             public void onCountrySelected(Country selectedCountry) {
-                Toast.makeText(EnterMobileNumberActivity.this, "Updated " + selectedCountry.getIso(), Toast.LENGTH_SHORT).show();
                 strCountryCode="+"+selectedCountry.getPhoneCode();
             }
         });
+
+        edtMobileNumber.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
+
+                    final CommonMethods commonMethods = new CommonMethods(EnterMobileNumberActivity.this);
+                    final ArrayList<User> arrayListUser = new ArrayList<>();
+                    final User[] alreadyUser = {new User()};
+                    mFirebaseDatabase.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+
+                            boolean isPresent = false;
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                User user = snapshot.getValue(User.class);
+                                arrayListUser.add(user);
+                                String mobileNumber = "";
+                                if (null != user.getMobileNumber()) {
+                                    mobileNumber = user.getMobileNumber();
+                                }
+                                if (mobileNumber.equals(edtMobileNumber.getText().toString().trim())) {
+                                    isPresent = true;
+                                    alreadyUser[0] = user;
+                                }
+                            }
+
+                       /* for (int i = 0; i < arrayListUser.size(); i++) {
+
+                        }*/
+//                        if (!isPresent) {
+
+                            if(!preferences.getBoolean("restrictRedirectionToVerify",false)) {
+                                if (!preferences.getBoolean("restrictRedirection", false)) {
+                                    if (edtMobileNumber.getText().toString().trim().length() > 0
+                                            && (commonMethods.isValidMobile(edtMobileNumber.getText().toString().trim()))
+                                    ) {
+                                        edit.putBoolean("restrictRedirectionToVerify",true);
+                                        edit.commit();
+                                        Intent intent = new Intent(EnterMobileNumberActivity.this, MobileVerificationActivity.class);
+                                        intent.putExtra("countryCode", ccp.getSelectedCountryCodeWithPlus());
+                                        intent.putExtra("mobile", edtMobileNumber.getText().toString().trim());
+                                        intent.putExtra("alreadyUser", isPresent);
+                                        intent.putExtra("alreadyUserData", alreadyUser[0]);
+                                        startActivity(intent);
+                                        finish();
+                                    } else {
+                                        edtMobileNumber.setError("Enter valid mobile number.");
+                                    }
+                       /* } else {
+                            Toast.makeText(EnterMobileNumberActivity.this, "Mobile number already exist", Toast.LENGTH_SHORT).show();
+                        }*/
+                                } else {
+                                    finish();
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError error) {
+                            // Failed to read value
+                            Log.e(TAG, "Failed to read user", error.toException());
+                        }
+
+
+                    });
+
+                }
+                return false;
+            }
+        });
+
+
         btnSendOTP.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

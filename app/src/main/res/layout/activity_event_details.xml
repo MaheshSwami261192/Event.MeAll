@@ -144,7 +144,7 @@
                                 android:gravity=""
                                 >
 
-                                <ImageView
+                                <de.hdodenhof.circleimageview.CircleImageView
                                     android:id="@+id/imgContactProfile"
                                     android:layout_width="37dp"
                                     android:layout_height="37dp"

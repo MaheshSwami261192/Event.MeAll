@@ -213,8 +213,8 @@ public class AddNewEventActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent intent = new Intent(AddNewEventActivity.this, MainActivity.class);
-        startActivity(intent);
+       /* Intent intent = new Intent(AddNewEventActivity.this, MainActivity.class);
+        startActivity(intent);*/
         finish();
 
     }
@@ -261,8 +261,8 @@ public class AddNewEventActivity extends AppCompatActivity {
         llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(AddNewEventActivity.this, MainActivity.class);
-                startActivity(intent);
+               /* Intent intent = new Intent(AddNewEventActivity.this, MainActivity.class);
+                startActivity(intent);*/
                 finish();
 
             }
@@ -271,17 +271,7 @@ public class AddNewEventActivity extends AppCompatActivity {
         imgAddInvitees.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (ContextCompat.checkSelfPermission(AddNewEventActivity.this,
-                        Manifest.permission.SEND_SMS)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    if (ActivityCompat.shouldShowRequestPermissionRationale(AddNewEventActivity.this,
-                            Manifest.permission.SEND_SMS)) {
-                    } else {
-                        ActivityCompat.requestPermissions(AddNewEventActivity.this,
-                                new String[]{Manifest.permission.SEND_SMS,Manifest.permission.READ_PHONE_STATE},
-                                MY_PERMISSIONS_REQUEST_SEND_SMS);
-                    }
-                }
+
 
                 Intent intent = new Intent(AddNewEventActivity.this, ContactListActivity.class);
                 startActivity(intent);

@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group>
-      <!--  <item android:id="@+id/nav_main_menu"
-            android:icon="@drawable/four_dots"
-            android:title=""
-            />-->
-       <!-- <item android:id="@+id/nav_profile"
+
+        <item android:id="@+id/nav_profile"
             android:icon="@drawable/man"
-            android:title=""
+            android:title="My Account"
             />
         <item android:id="@+id/nav_item_two"
             android:icon="@drawable/home"
-            android:title="" />-->
+            android:title="Notification" />
+
         <item android:id="@+id/nav_logout"
             android:icon="@drawable/logout"
             android:title="Logout" />

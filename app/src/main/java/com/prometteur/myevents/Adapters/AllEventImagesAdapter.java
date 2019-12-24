@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -45,6 +46,7 @@ public class AllEventImagesAdapter extends RecyclerView.Adapter<AllEventImagesAd
     Context mContext;
     String uploadTime="";
     private final OnItemClickListener listener;
+    private final View.OnLongClickListener onLongClickListener;
 
     public interface OnItemClickListener {
         void onItemClick(EventImageFirebase item,int position);
@@ -88,10 +90,14 @@ public class AllEventImagesAdapter extends RecyclerView.Adapter<AllEventImagesAd
 
 
     EventClassFirebase clikedEvent;
-    public AllEventImagesAdapter(Context mContext, List<EventImageFirebase> eventsList, EventClassFirebase clickedEvent, OnItemClickListener listener) {
+    public AllEventImagesAdapter(Context mContext, List<EventImageFirebase> eventsList,
+                                 EventClassFirebase clickedEvent,
+                                 OnItemClickListener listener,
+                                 View.OnLongClickListener onLongClickListener) {
         this.eventsList = eventsList;
         this.mContext = mContext;
         this.listener = listener;
+        this.onLongClickListener = onLongClickListener;
         this.clikedEvent = clickedEvent;
     }
 
@@ -99,6 +105,7 @@ public class AllEventImagesAdapter extends RecyclerView.Adapter<AllEventImagesAd
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.rowlayout, parent, false);
+
 
         return new MyViewHolder(itemView);
     }
@@ -134,6 +141,21 @@ public class AllEventImagesAdapter extends RecyclerView.Adapter<AllEventImagesAd
         eventUploadTime=format2.format(date);*/
         //uploadTime=eventUploadTime;
 
+
+        holder.llLeft.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(mContext, "", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
+holder.llRight.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(mContext, "", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
 
         if(userName.equals(eventUploaderUserName))
         {

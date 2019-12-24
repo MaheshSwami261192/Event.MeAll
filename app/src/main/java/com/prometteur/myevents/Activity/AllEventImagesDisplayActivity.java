@@ -2,6 +2,7 @@ package com.prometteur.myevents.Activity;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -34,6 +35,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.github.chrisbanes.photoview.PhotoView;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -59,6 +61,7 @@ import com.prometteur.myevents.SingletonClasses.EventClassFirebase;
 import com.prometteur.myevents.SingletonClasses.EventCommentFirebase;
 import com.prometteur.myevents.SingletonClasses.EventImageFirebase;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -79,15 +82,15 @@ public class AllEventImagesDisplayActivity extends AppCompatActivity implements 
     RecyclerView rvEventAllImages, rvUserwiseImages, rvComments;
     EventClassFirebase clickedEvent;
     String eventName = "";
-    LinearLayout llBack,closeComment,cvSwipingLayout;
+    LinearLayout llBack, closeComment, cvSwipingLayout;
     TextView txtEventName;
     ArrayList<EventImageFirebase> imageList = new ArrayList<>();
-    CardView  cvEventPhotoDetail, cvAddComment;
+    CardView cvEventPhotoDetail, cvAddComment;
     AllEventImagesAdapter mAdapter;
     CircleImageView imgEventCreatorProfileCmt, imgEventCreatorProfileDes;
     TextView eventCreatorNameCmt, eventCreatorNameDes, eventDateTimeDes, txtImgTitle;
     ImageView eventSelectedImage, /*imgBtnSend, */
-            imgCloseCommentSheet;
+            imgCloseCommentSheet,imgCloseDialog;
     EditText edtCommentCmt;
     ImageView imgSwitchGallaryToTimeline, imgDetailsOfImage;
     Context mContext;
@@ -118,7 +121,7 @@ public class AllEventImagesDisplayActivity extends AppCompatActivity implements 
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
-         getSupportActionBar().hide();
+        getSupportActionBar().hide();
 //        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_all_event_images_display);
         mContext = this;
@@ -150,6 +153,10 @@ public class AllEventImagesDisplayActivity extends AppCompatActivity implements 
         fabAddEventPhotos = findViewById(R.id.fabAddEventPhotos);
         rvComments = findViewById(R.id.rvComments);
         imgDetailsOfImage = findViewById(R.id.imgDetailsOfImage);
+        imgDetailsOfImage.setOnClickListener(null);
+
+
+
         imgSwitchGallaryToTimeline = findViewById(R.id.imgSwitchGallaryToTimeline);
         imgEventCreatorProfileCmt = findViewById(R.id.imgEventCreatorProfileCmt);
         imgEventCreatorProfileDes = findViewById(R.id.imgEventCreatorProfileDes);
@@ -160,6 +167,7 @@ public class AllEventImagesDisplayActivity extends AppCompatActivity implements 
         eventSelectedImage = findViewById(R.id.eventSelectedImage);
         // imgBtnSend = findViewById(R.id.imgBtnSend);
         imgCloseCommentSheet = findViewById(R.id.imgCloseCommentSheet);
+        imgCloseDialog = findViewById(R.id.imgCloseDialog);
         edtCommentCmt = findViewById(R.id.edtCommentCmt);
         cvSwipingLayout = findViewById(R.id.cvSwipingLayout);
         cvEventPhotoDetail = findViewById(R.id.cvEventPhotoDetail);
@@ -212,18 +220,19 @@ public class AllEventImagesDisplayActivity extends AppCompatActivity implements 
                 new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(rvEventAllImages);
 
 
-                mAdapter = new AllEventImagesAdapter(AllEventImagesDisplayActivity.this, imageList, clickedEvent, new AllEventImagesAdapter.OnItemClickListener() {
+                mAdapter = new AllEventImagesAdapter(AllEventImagesDisplayActivity.this, imageList,
+                        clickedEvent, new AllEventImagesAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(EventImageFirebase item, int position) {
                         SelectedImagePosition = position;
 
                         String url1 = item.getImgUploaderPhoto();
 
-                        if(url1!=null && !url1.isEmpty()) {
+                        if (url1 != null && !url1.isEmpty()) {
                             Glide.with(AllEventImagesDisplayActivity.this)
                                     .load(url1)
                                     .into(imgEventCreatorProfileCmt);
-                        }else{
+                        } else {
                             Glide.with(AllEventImagesDisplayActivity.this)
                                     .load(R.drawable.default_profile)
                                     .into(imgEventCreatorProfileCmt);
@@ -237,6 +246,21 @@ public class AllEventImagesDisplayActivity extends AppCompatActivity implements 
                         Glide.with(AllEventImagesDisplayActivity.this)
                                 .load(urleventSelectedImage)
                                 .into(eventSelectedImage);
+
+                    /*    imgDetailsOfImage.setOnTouchListener(new View.OnTouchListener() {
+                            public boolean onTouch(View v, MotionEvent event) {
+                                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                                    if ("".equals("")) {
+                                        openDialog(urleventSelectedImage);
+
+                                    }
+
+                                }
+                                return true;
+                            }
+                        });
+
+*/
 
 
                    /* Intent intent = new Intent(AllEventImagesDisplayActivity.this, EventPhotoDetailsActivity.class);
@@ -264,12 +288,25 @@ public class AllEventImagesDisplayActivity extends AppCompatActivity implements 
                         cvEventPhotoDetail.setVisibility(View.VISIBLE);
                         fabAddEventPhotos.hide();
                         eventCreatorNameDes.setText(imageList.get(position).getImgUploaderName());
-                        eventDateTimeDes.setText(imageList.get(position).getImgUploadTime());
+
+
+                        SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+                        SimpleDateFormat format2 = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
+                        Date date = null;
+                        try {
+                            date = format1.parse(imageList.get(position).getImgUploadTime());
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        String dateToSet = format2.format(date);
+
+
+                        eventDateTimeDes.setText(dateToSet);
                         txtImgTitle.setText(imageList.get(position).getImgUploaderUserName());
 // Todo: changes
                         List<EventCommentFirebase> commentFirebaseArrayList = new ArrayList<>();
                         CommentsAdapter commentsAdapter = new CommentsAdapter(commentFirebaseArrayList, AllEventImagesDisplayActivity.this);
-                        LinearLayoutManager linearLayoutManager=new LinearLayoutManager(AllEventImagesDisplayActivity.this);
+                        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(AllEventImagesDisplayActivity.this);
                         linearLayoutManager.setReverseLayout(true);
                         rvComments.setLayoutManager(linearLayoutManager);
                         rvComments.setItemAnimator(new DefaultItemAnimator());
@@ -286,13 +323,11 @@ public class AllEventImagesDisplayActivity extends AppCompatActivity implements 
                                 for (DataSnapshot data : dataSnapshot.getChildren()) {
                                     EventCommentFirebase value = data.getValue(EventCommentFirebase.class);
                                     commentFirebaseArrayList.add(value);
-                                    if(imageList.get(position).getImgComments()!=null)
-                                    {
+                                    if (imageList.get(position).getImgComments() != null) {
                                         imageList.get(position).getImgComments().put(data.getKey(), value);
-                                    }else
-                                    {
-                                        Map<String,EventCommentFirebase> val=new HashMap<>();
-                                        val.put(data.getKey(),value);
+                                    } else {
+                                        Map<String, EventCommentFirebase> val = new HashMap<>();
+                                        val.put(data.getKey(), value);
                                         imageList.get(position).setImgComments(val);
                                     }
 
@@ -311,6 +346,12 @@ public class AllEventImagesDisplayActivity extends AppCompatActivity implements 
 
 
                     }
+                },
+                        new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        return false;
+                    }
                 });
 
                 rvEventAllImages.setAdapter(mAdapter);
@@ -318,7 +359,7 @@ public class AllEventImagesDisplayActivity extends AppCompatActivity implements 
             }
         }
 
-        imgSwitchGallaryToTimeline.setImageResource(R.drawable.gallery);
+        imgSwitchGallaryToTimeline.setImageResource(R.mipmap.ic_gallary);
 
         imgSwitchGallaryToTimeline.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -365,110 +406,140 @@ public class AllEventImagesDisplayActivity extends AppCompatActivity implements 
                     rvEventAllImages.setVisibility(View.VISIBLE);
                     rvUserwiseImages.setVisibility(View.GONE);
 
-                    imgSwitchGallaryToTimeline.setImageResource(R.drawable.gallery);
+                    imgSwitchGallaryToTimeline.setImageResource(R.mipmap.ic_gallary);
                     showingGallery = false;
 
                     if (imageList != null) {
                         if (imageList.size() > 0) {
 
-                            mAdapter = new AllEventImagesAdapter(AllEventImagesDisplayActivity.this, imageList, clickedEvent, new AllEventImagesAdapter.OnItemClickListener() {
-                                @Override
-                                public void onItemClick(EventImageFirebase item, int position) {
-                                    SelectedImagePosition = position;
+                            mAdapter = new AllEventImagesAdapter(AllEventImagesDisplayActivity.this,
+                                    imageList, clickedEvent,
+                                    new AllEventImagesAdapter.OnItemClickListener() {
+                                        @Override
+                                        public void onItemClick(EventImageFirebase item, int position) {
+                                            SelectedImagePosition = position;
 
-                                    String url1 = item.getImgUploaderPhoto();
+                                            String url1 = item.getImgUploaderPhoto();
 
-                                    if(url1!=null && !url1.isEmpty()) {
-                                        Glide.with(AllEventImagesDisplayActivity.this)
-                                                .load(url1)
-                                                .into(imgEventCreatorProfileCmt);
-                                    }else{
-                                        Glide.with(AllEventImagesDisplayActivity.this)
-                                                .load(R.drawable.default_profile)
-                                                .into(imgEventCreatorProfileCmt);
-                                    }
-
-
-                                    eventCreatorNameCmt.setText(nameRealname);
-
-                                    String urleventSelectedImage = item.getImgPath();
-
-                                    Glide.with(AllEventImagesDisplayActivity.this)
-                                            .load(urleventSelectedImage)
-                                            .into(eventSelectedImage);
+                                            if (url1 != null && !url1.isEmpty()) {
+                                                Glide.with(AllEventImagesDisplayActivity.this)
+                                                        .load(url1)
+                                                        .into(imgEventCreatorProfileCmt);
+                                            } else {
+                                                Glide.with(AllEventImagesDisplayActivity.this)
+                                                        .load(R.drawable.default_profile)
+                                                        .into(imgEventCreatorProfileCmt);
+                                            }
 
 
+                                            eventCreatorNameCmt.setText(nameRealname);
+
+                                            String urleventSelectedImage = item.getImgPath();
+
+                                            Glide.with(AllEventImagesDisplayActivity.this)
+                                                    .load(urleventSelectedImage)
+                                                    .into(eventSelectedImage);
+
+                                         /*   imgDetailsOfImage.setOnTouchListener(new View.OnTouchListener() {
+                                                public boolean onTouch(View v, MotionEvent event) {
+                                                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                                                        if ("".equals("")) {
+                                                            openDialog(urleventSelectedImage);
+
+                                                        }
+                                                    }
+                                                    return true;
+                                                }
+                                            });
+
+*/
                    /* Intent intent = new Intent(AllEventImagesDisplayActivity.this, EventPhotoDetailsActivity.class);
                     startActivity(intent);*/
 
-                                    String urlimgEventCreatorProfileDes = imageList.get(position).getImgUploaderPhoto();
-                                    if (!urlimgEventCreatorProfileDes.isEmpty()) {
-                                        Glide.with(AllEventImagesDisplayActivity.this)
-                                                .load(urlimgEventCreatorProfileDes)
-                                                .into(imgEventCreatorProfileDes);
-                                    } else {
-                                        Glide.with(AllEventImagesDisplayActivity.this)
-                                                .load(R.drawable.default_profile)
-                                                .into(imgEventCreatorProfileDes);
-                                    }
-                                    String urlimgDetailsOfImage = imageList.get(position).getImgPath();
-
-                                    Glide.with(AllEventImagesDisplayActivity.this)
-                                            .load(urlimgDetailsOfImage)
-                                            .into(imgDetailsOfImage);
-
-                                    linAlphaBlock.setAlpha(0.5f);
-                                    cvSwipingLayout.setVisibility(View.VISIBLE);
-                                    cvAddComment.setVisibility(View.GONE);
-                                    closeComment.setVisibility(View.GONE);
-                                    cvEventPhotoDetail.setVisibility(View.VISIBLE);
-                                    fabAddEventPhotos.hide();
-                                    eventCreatorNameDes.setText(imageList.get(position).getImgUploaderName());
-                                    eventDateTimeDes.setText(imageList.get(position).getImgUploadTime());
-                                    txtImgTitle.setText(imageList.get(position).getImgUploaderUserName());
-// Todo: changes
-                                    List<EventCommentFirebase> commentFirebaseArrayList = new ArrayList<>();
-                                    CommentsAdapter commentsAdapter = new CommentsAdapter(commentFirebaseArrayList, AllEventImagesDisplayActivity.this);
-                                    LinearLayoutManager linearLayoutManager=new LinearLayoutManager(AllEventImagesDisplayActivity.this);
-                                    linearLayoutManager.setReverseLayout(true);
-                                    rvComments.setLayoutManager(linearLayoutManager);
-                                    rvComments.setItemAnimator(new DefaultItemAnimator());
-                                    rvComments.setAdapter(commentsAdapter);
-                                    String key = clickedEvent.getEventKey();
-                                    DatabaseReference commentsDatabace = mFirebaseDatabase.child(key).child("eventImages")
-                                            .child("" + SelectedImagePosition)
-                                            .child("imgComments");
-
-                                    commentsDatabace.addValueEventListener(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                            commentFirebaseArrayList.clear();
-                                            for (DataSnapshot data : dataSnapshot.getChildren()) {
-                                                EventCommentFirebase value = data.getValue(EventCommentFirebase.class);
-                                                commentFirebaseArrayList.add(value);
-                                                if(imageList.get(position).getImgComments()!=null)
-                                                {
-                                                    imageList.get(position).getImgComments().put(data.getKey(), value);
-                                                }else
-                                                {
-                                                    Map<String,EventCommentFirebase> val=new HashMap<>();
-                                                    val.put(data.getKey(),value);
-                                                    imageList.get(position).setImgComments(val);
-                                                }
+                                            String urlimgEventCreatorProfileDes = imageList.get(position).getImgUploaderPhoto();
+                                            if (!urlimgEventCreatorProfileDes.isEmpty()) {
+                                                Glide.with(AllEventImagesDisplayActivity.this)
+                                                        .load(urlimgEventCreatorProfileDes)
+                                                        .into(imgEventCreatorProfileDes);
+                                            } else {
+                                                Glide.with(AllEventImagesDisplayActivity.this)
+                                                        .load(R.drawable.default_profile)
+                                                        .into(imgEventCreatorProfileDes);
                                             }
-                                            Collections.reverse(commentFirebaseArrayList);
-                                            commentsAdapter.notifyDataSetChanged();
-                                            mAdapter.notifyDataSetChanged();
-                                            rvComments.scrollToPosition(commentFirebaseArrayList.size());
+                                            String urlimgDetailsOfImage = imageList.get(position).getImgPath();
+
+                                            Glide.with(AllEventImagesDisplayActivity.this)
+                                                    .load(urlimgDetailsOfImage)
+                                                    .into(imgDetailsOfImage);
+
+                                            linAlphaBlock.setAlpha(0.5f);
+                                            cvSwipingLayout.setVisibility(View.VISIBLE);
+                                            cvAddComment.setVisibility(View.GONE);
+                                            closeComment.setVisibility(View.GONE);
+                                            cvEventPhotoDetail.setVisibility(View.VISIBLE);
+                                            fabAddEventPhotos.hide();
+                                            eventCreatorNameDes.setText(imageList.get(position).getImgUploaderName());
+
+
+                                            SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+                                            SimpleDateFormat format2 = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
+                                            Date date = null;
+                                            try {
+                                                date = format1.parse(imageList.get(position).getImgUploadTime());
+                                            } catch (ParseException e) {
+                                                e.printStackTrace();
+                                            }
+                                            String dateToSet = format2.format(date);
+
+
+                                            eventDateTimeDes.setText(dateToSet);
+                                            txtImgTitle.setText(imageList.get(position).getImgUploaderUserName());
+// Todo: changes
+                                            List<EventCommentFirebase> commentFirebaseArrayList = new ArrayList<>();
+                                            CommentsAdapter commentsAdapter = new CommentsAdapter(commentFirebaseArrayList, AllEventImagesDisplayActivity.this);
+                                            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(AllEventImagesDisplayActivity.this);
+                                            linearLayoutManager.setReverseLayout(true);
+                                            rvComments.setLayoutManager(linearLayoutManager);
+                                            rvComments.setItemAnimator(new DefaultItemAnimator());
+                                            rvComments.setAdapter(commentsAdapter);
+                                            String key = clickedEvent.getEventKey();
+                                            DatabaseReference commentsDatabace = mFirebaseDatabase.child(key).child("eventImages")
+                                                    .child("" + SelectedImagePosition)
+                                                    .child("imgComments");
+
+                                            commentsDatabace.addValueEventListener(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                    commentFirebaseArrayList.clear();
+                                                    for (DataSnapshot data : dataSnapshot.getChildren()) {
+                                                        EventCommentFirebase value = data.getValue(EventCommentFirebase.class);
+                                                        commentFirebaseArrayList.add(value);
+                                                        if (imageList.get(position).getImgComments() != null) {
+                                                            imageList.get(position).getImgComments().put(data.getKey(), value);
+                                                        } else {
+                                                            Map<String, EventCommentFirebase> val = new HashMap<>();
+                                                            val.put(data.getKey(), value);
+                                                            imageList.get(position).setImgComments(val);
+                                                        }
+                                                    }
+                                                    Collections.reverse(commentFirebaseArrayList);
+                                                    commentsAdapter.notifyDataSetChanged();
+                                                    mAdapter.notifyDataSetChanged();
+                                                    rvComments.scrollToPosition(commentFirebaseArrayList.size());
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                }
+                                            });
+
+
                                         }
-
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                        }
-                                    });
-
-
+                                    }, new View.OnLongClickListener() {
+                                @Override
+                                public boolean onLongClick(View v) {
+                                    return false;
                                 }
                             });
                             rvEventAllImages.setAdapter(mAdapter);
@@ -514,6 +585,7 @@ public class AllEventImagesDisplayActivity extends AppCompatActivity implements 
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
+        SelectedImagePosition = position;
 
         if (viewHolder instanceof AllEventImagesAdapter.MyViewHolder) {
             cvSwipingLayout.setVisibility(View.VISIBLE);
@@ -525,18 +597,20 @@ public class AllEventImagesDisplayActivity extends AppCompatActivity implements 
 
 
             if (imageList != null) {
-                EventImageFirebase item=imageList.get(position);
+                EventImageFirebase item = imageList.get(position);
                 String url1 = item.getImgUploaderPhoto();
 
-                if(url1!=null && !url1.isEmpty()) {
+                if (url1 != null && !url1.isEmpty()) {
                     Glide.with(AllEventImagesDisplayActivity.this)
                             .load(url1)
                             .into(imgEventCreatorProfileCmt);
-                }else{
+                } else {
                     Glide.with(AllEventImagesDisplayActivity.this)
                             .load(R.drawable.default_profile)
                             .into(imgEventCreatorProfileCmt);
                 }
+
+
 
 
                 eventCreatorNameCmt.setText(item.getImgUploaderName());
@@ -546,6 +620,21 @@ public class AllEventImagesDisplayActivity extends AppCompatActivity implements 
                 Glide.with(AllEventImagesDisplayActivity.this)
                         .load(urleventSelectedImage)
                         .into(eventSelectedImage);
+
+
+
+              /*  imgDetailsOfImage.setOnTouchListener(new View.OnTouchListener() {
+                    public boolean onTouch(View v, MotionEvent event) {
+                        if(event.getAction() == MotionEvent.ACTION_DOWN){
+                            if ("" .equals("")){
+
+                                openDialog(urleventSelectedImage);
+                            }
+                        }
+                        return true;
+                    }
+                });
+*/
 
             }
 
@@ -598,6 +687,36 @@ public class AllEventImagesDisplayActivity extends AppCompatActivity implements 
 
 
     }
+
+    private void openDialog(String urleventSelectedImage) {
+        Dialog settingsDialog = new Dialog(AllEventImagesDisplayActivity.this);
+
+        if(!settingsDialog.isShowing())
+        {
+            settingsDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+            settingsDialog.setContentView(getLayoutInflater().inflate(R.layout.image_layout
+                    , null));
+
+
+            PhotoView imgDetailsOfImage=settingsDialog.findViewById(R.id.imgDetailsOfImage);
+            ImageView imgDialogBtnClose=settingsDialog.findViewById(R.id.imgDialogBtnClose);
+            Glide.with(AllEventImagesDisplayActivity.this)
+                    .load(urleventSelectedImage)
+                    .into(imgDetailsOfImage);
+
+            settingsDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT);
+
+            imgDialogBtnClose.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    settingsDialog.dismiss();
+                }
+            });
+            settingsDialog.show();
+        }
+
+    }
+
 
     private void onClicks() {
 
@@ -657,6 +776,15 @@ public class AllEventImagesDisplayActivity extends AppCompatActivity implements 
             }
         });*/
         imgCloseCommentSheet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                linAlphaBlock.setAlpha(1.0f);
+                cvSwipingLayout.setVisibility(View.GONE);
+
+                fabAddEventPhotos.show();
+            }
+        });
+        imgCloseDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 linAlphaBlock.setAlpha(1.0f);
@@ -868,8 +996,8 @@ public class AllEventImagesDisplayActivity extends AppCompatActivity implements 
         ArrayList<EventImageFirebase> eventImagesOld = clickedEvent.getEventImages();
         if (eventImagesOld != null) {
             eventImagesOld.addAll(eventImages);
-        }else if(eventImages.size()>0){
-            eventImagesOld=new ArrayList<>();
+        } else if (eventImages.size() > 0) {
+            eventImagesOld = new ArrayList<>();
             eventImagesOld.addAll(eventImages);
         }
         Map<String, Object> mapEventImages = new HashMap<>();
@@ -918,103 +1046,134 @@ public class AllEventImagesDisplayActivity extends AppCompatActivity implements 
                             new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(rvEventAllImages);
 
 
-                            mAdapter = new AllEventImagesAdapter(AllEventImagesDisplayActivity.this, imageList, clickedEvent, new AllEventImagesAdapter.OnItemClickListener() {
-                                @Override
-                                public void onItemClick(EventImageFirebase item, int position) {
-                                    SelectedImagePosition = position;
+                            mAdapter = new AllEventImagesAdapter(AllEventImagesDisplayActivity.this,
+                                    imageList, clickedEvent,
+                                    new AllEventImagesAdapter.OnItemClickListener() {
+                                        @Override
+                                        public void onItemClick(EventImageFirebase item, int position) {
+                                            SelectedImagePosition = position;
 
-                                    String url1 = item.getImgUploaderPhoto();
-                                    if(url1!=null && !url1.isEmpty()) {
-                                        Glide.with(AllEventImagesDisplayActivity.this)
-                                                .load(url1)
-                                                .into(imgEventCreatorProfileCmt);
-                                    }else{
-                                        Glide.with(AllEventImagesDisplayActivity.this)
-                                                .load(R.drawable.default_profile)
-                                                .into(imgEventCreatorProfileCmt);
-                                    }
+                                            String url1 = item.getImgUploaderPhoto();
+                                            if (url1 != null && !url1.isEmpty()) {
+                                                Glide.with(AllEventImagesDisplayActivity.this)
+                                                        .load(url1)
+                                                        .into(imgEventCreatorProfileCmt);
+                                            } else {
+                                                Glide.with(AllEventImagesDisplayActivity.this)
+                                                        .load(R.drawable.default_profile)
+                                                        .into(imgEventCreatorProfileCmt);
+                                            }
 
 
-                                    eventCreatorNameCmt.setText(nameRealname);
+                                            eventCreatorNameCmt.setText(nameRealname);
 
-                                    String urleventSelectedImage = item.getImgPath();
+                                            String urleventSelectedImage = item.getImgPath();
 
-                                    Glide.with(AllEventImagesDisplayActivity.this)
-                                            .load(urleventSelectedImage)
-                                            .into(eventSelectedImage);
+                                            Glide.with(AllEventImagesDisplayActivity.this)
+                                                    .load(urleventSelectedImage)
+                                                    .into(eventSelectedImage);
+
+                                          /*  imgDetailsOfImage.setOnTouchListener(new View.OnTouchListener() {
+                                                public boolean onTouch(View v, MotionEvent event) {
+                                                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                                                        if ("".equals("")) {
+                                                            openDialog(urleventSelectedImage);
+
+                                                        }
+                                                    }
+                                                    return true;
+                                                }
+                                            });*/
+
 
 
                    /* Intent intent = new Intent(AllEventImagesDisplayActivity.this, EventPhotoDetailsActivity.class);
                     startActivity(intent);*/
 
-                                    String urlimgEventCreatorProfileDes = imageList.get(position).getImgUploaderPhoto();
-                                    if (!urlimgEventCreatorProfileDes.isEmpty()) {
-                                        Glide.with(AllEventImagesDisplayActivity.this)
-                                                .load(urlimgEventCreatorProfileDes)
-                                                .into(imgEventCreatorProfileDes);
-                                    } else {
-                                        Glide.with(AllEventImagesDisplayActivity.this)
-                                                .load(R.drawable.default_profile)
-                                                .into(imgEventCreatorProfileDes);
-                                    }
-                                    String urlimgDetailsOfImage = imageList.get(position).getImgPath();
-
-                                    Glide.with(AllEventImagesDisplayActivity.this)
-                                            .load(urlimgDetailsOfImage)
-                                            .into(imgDetailsOfImage);
-
-                                    linAlphaBlock.setAlpha(0.5f);
-                                    cvSwipingLayout.setVisibility(View.VISIBLE);
-                                    closeComment.setVisibility(View.GONE);
-                                    cvAddComment.setVisibility(View.GONE);
-                                    cvEventPhotoDetail.setVisibility(View.VISIBLE);
-                                    fabAddEventPhotos.hide();
-                                    eventCreatorNameDes.setText(imageList.get(position).getImgUploaderName());
-                                    eventDateTimeDes.setText(imageList.get(position).getImgUploadTime());
-                                    txtImgTitle.setText(imageList.get(position).getImgUploaderUserName());
-                                    // Todo: changes
-                                    List<EventCommentFirebase> commentFirebaseArrayList = new ArrayList<>();
-                                    CommentsAdapter commentsAdapter = new CommentsAdapter(commentFirebaseArrayList, AllEventImagesDisplayActivity.this);
-                                    LinearLayoutManager linearLayoutManager=new LinearLayoutManager(AllEventImagesDisplayActivity.this);
-                                    linearLayoutManager.setReverseLayout(true);
-                                    rvComments.setLayoutManager(linearLayoutManager);
-                                    rvComments.setItemAnimator(new DefaultItemAnimator());
-                                    rvComments.setAdapter(commentsAdapter);
-                                    String key = clickedEvent.getEventKey();
-                                    DatabaseReference commentsDatabace = mFirebaseDatabase.child(key).child("eventImages")
-                                            .child("" + SelectedImagePosition)
-                                            .child("imgComments");
-
-                                    commentsDatabace.addValueEventListener(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                            commentFirebaseArrayList.clear();
-                                            for (DataSnapshot data : dataSnapshot.getChildren()) {
-                                                EventCommentFirebase value = data.getValue(EventCommentFirebase.class);
-                                                commentFirebaseArrayList.add(value);
-                                                if(imageList.get(position).getImgComments()!=null)
-                                                {
-                                                    imageList.get(position).getImgComments().put(data.getKey(), value);
-                                                }else
-                                                {
-                                                    Map<String,EventCommentFirebase> val=new HashMap<>();
-                                                    val.put(data.getKey(),value);
-                                                    imageList.get(position).setImgComments(val);
-                                                }
+                                            String urlimgEventCreatorProfileDes = imageList.get(position).getImgUploaderPhoto();
+                                            if (!urlimgEventCreatorProfileDes.isEmpty()) {
+                                                Glide.with(AllEventImagesDisplayActivity.this)
+                                                        .load(urlimgEventCreatorProfileDes)
+                                                        .into(imgEventCreatorProfileDes);
+                                            } else {
+                                                Glide.with(AllEventImagesDisplayActivity.this)
+                                                        .load(R.drawable.default_profile)
+                                                        .into(imgEventCreatorProfileDes);
                                             }
-                                            Collections.reverse(commentFirebaseArrayList);
-                                            commentsAdapter.notifyDataSetChanged();
-                                            mAdapter.notifyDataSetChanged();
-                                            rvComments.scrollToPosition(commentFirebaseArrayList.size());
+                                            String urlimgDetailsOfImage = imageList.get(position).getImgPath();
+
+                                            Glide.with(AllEventImagesDisplayActivity.this)
+                                                    .load(urlimgDetailsOfImage)
+                                                    .into(imgDetailsOfImage);
+
+                                            linAlphaBlock.setAlpha(0.5f);
+                                            cvSwipingLayout.setVisibility(View.VISIBLE);
+                                            closeComment.setVisibility(View.GONE);
+                                            cvAddComment.setVisibility(View.GONE);
+                                            cvEventPhotoDetail.setVisibility(View.VISIBLE);
+                                            fabAddEventPhotos.hide();
+                                            eventCreatorNameDes.setText(imageList.get(position).getImgUploaderName());
+
+
+                                            SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+                                            SimpleDateFormat format2 = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
+                                            Date date = null;
+                                            try {
+                                                date = format1.parse(imageList.get(position).getImgUploadTime());
+                                            } catch (ParseException e) {
+                                                e.printStackTrace();
+                                            }
+                                            String dateToSet = format2.format(date);
+
+
+                                            eventDateTimeDes.setText(dateToSet);
+                                            txtImgTitle.setText(imageList.get(position).getImgUploaderUserName());
+                                            // Todo: changes
+                                            List<EventCommentFirebase> commentFirebaseArrayList = new ArrayList<>();
+                                            CommentsAdapter commentsAdapter = new CommentsAdapter(commentFirebaseArrayList, AllEventImagesDisplayActivity.this);
+                                            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(AllEventImagesDisplayActivity.this);
+                                            linearLayoutManager.setReverseLayout(true);
+                                            rvComments.setLayoutManager(linearLayoutManager);
+                                            rvComments.setItemAnimator(new DefaultItemAnimator());
+                                            rvComments.setAdapter(commentsAdapter);
+                                            String key = clickedEvent.getEventKey();
+                                            DatabaseReference commentsDatabace = mFirebaseDatabase.child(key).child("eventImages")
+                                                    .child("" + SelectedImagePosition)
+                                                    .child("imgComments");
+
+                                            commentsDatabace.addValueEventListener(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                    commentFirebaseArrayList.clear();
+                                                    for (DataSnapshot data : dataSnapshot.getChildren()) {
+                                                        EventCommentFirebase value = data.getValue(EventCommentFirebase.class);
+                                                        commentFirebaseArrayList.add(value);
+                                                        if (imageList.get(position).getImgComments() != null) {
+                                                            imageList.get(position).getImgComments().put(data.getKey(), value);
+                                                        } else {
+                                                            Map<String, EventCommentFirebase> val = new HashMap<>();
+                                                            val.put(data.getKey(), value);
+                                                            imageList.get(position).setImgComments(val);
+                                                        }
+                                                    }
+                                                    Collections.reverse(commentFirebaseArrayList);
+                                                    commentsAdapter.notifyDataSetChanged();
+                                                    mAdapter.notifyDataSetChanged();
+                                                    rvComments.scrollToPosition(commentFirebaseArrayList.size());
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                }
+                                            });
+
+
                                         }
-
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                        }
-                                    });
-
-
+                                    }, new View.OnLongClickListener() {
+                                @Override
+                                public boolean onLongClick(View v) {
+                                    return false;
                                 }
                             });
                             rvEventAllImages.setAdapter(mAdapter);
@@ -1058,6 +1217,193 @@ public class AllEventImagesDisplayActivity extends AppCompatActivity implements 
 
 
                 Toast.makeText(AllEventImagesDisplayActivity.this, "Image added successfully", Toast.LENGTH_SHORT).show();
+
+
+                if (!showingGallery) {
+                    rvEventAllImages.setVisibility(View.VISIBLE);
+                    rvUserwiseImages.setVisibility(View.GONE);
+
+                    imgSwitchGallaryToTimeline.setImageResource(R.mipmap.ic_gallary);
+
+                    if (imageList != null) {
+                        if (imageList.size() > 0) {
+
+                            mAdapter = new AllEventImagesAdapter(AllEventImagesDisplayActivity.this,
+                                    imageList, clickedEvent,
+                                    new AllEventImagesAdapter.OnItemClickListener() {
+                                        @Override
+                                        public void onItemClick(EventImageFirebase item, int position) {
+                                            SelectedImagePosition = position;
+
+                                            String url1 = item.getImgUploaderPhoto();
+
+                                            if (url1 != null && !url1.isEmpty()) {
+                                                Glide.with(AllEventImagesDisplayActivity.this)
+                                                        .load(url1)
+                                                        .into(imgEventCreatorProfileCmt);
+                                            } else {
+                                                Glide.with(AllEventImagesDisplayActivity.this)
+                                                        .load(R.drawable.default_profile)
+                                                        .into(imgEventCreatorProfileCmt);
+                                            }
+
+
+                                            eventCreatorNameCmt.setText(nameRealname);
+
+                                            String urleventSelectedImage = item.getImgPath();
+
+                                            Glide.with(AllEventImagesDisplayActivity.this)
+                                                    .load(urleventSelectedImage)
+                                                    .into(eventSelectedImage);
+
+                                         /*   imgDetailsOfImage.setOnTouchListener(new View.OnTouchListener() {
+                                                public boolean onTouch(View v, MotionEvent event) {
+                                                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                                                        if ("".equals("")) {
+                                                            openDialog(urleventSelectedImage);
+
+                                                        }
+                                                    }
+                                                    return true;
+                                                }
+                                            });
+
+*/
+                   /* Intent intent = new Intent(AllEventImagesDisplayActivity.this, EventPhotoDetailsActivity.class);
+                    startActivity(intent);*/
+
+                                            String urlimgEventCreatorProfileDes = imageList.get(position).getImgUploaderPhoto();
+                                            if (!urlimgEventCreatorProfileDes.isEmpty()) {
+                                                Glide.with(AllEventImagesDisplayActivity.this)
+                                                        .load(urlimgEventCreatorProfileDes)
+                                                        .into(imgEventCreatorProfileDes);
+                                            } else {
+                                                Glide.with(AllEventImagesDisplayActivity.this)
+                                                        .load(R.drawable.default_profile)
+                                                        .into(imgEventCreatorProfileDes);
+                                            }
+                                            String urlimgDetailsOfImage = imageList.get(position).getImgPath();
+
+                                            Glide.with(AllEventImagesDisplayActivity.this)
+                                                    .load(urlimgDetailsOfImage)
+                                                    .into(imgDetailsOfImage);
+
+                                            linAlphaBlock.setAlpha(0.5f);
+                                            cvSwipingLayout.setVisibility(View.VISIBLE);
+                                            cvAddComment.setVisibility(View.GONE);
+                                            closeComment.setVisibility(View.GONE);
+                                            cvEventPhotoDetail.setVisibility(View.VISIBLE);
+                                            fabAddEventPhotos.hide();
+                                            eventCreatorNameDes.setText(imageList.get(position).getImgUploaderName());
+
+
+                                            SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+                                            SimpleDateFormat format2 = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
+                                            Date date = null;
+                                            try {
+                                                date = format1.parse(imageList.get(position).getImgUploadTime());
+                                            } catch (ParseException e) {
+                                                e.printStackTrace();
+                                            }
+                                            String dateToSet = format2.format(date);
+
+
+                                            eventDateTimeDes.setText(dateToSet);
+                                            txtImgTitle.setText(imageList.get(position).getImgUploaderUserName());
+// Todo: changes
+                                            List<EventCommentFirebase> commentFirebaseArrayList = new ArrayList<>();
+                                            CommentsAdapter commentsAdapter = new CommentsAdapter(commentFirebaseArrayList, AllEventImagesDisplayActivity.this);
+                                            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(AllEventImagesDisplayActivity.this);
+                                            linearLayoutManager.setReverseLayout(true);
+                                            rvComments.setLayoutManager(linearLayoutManager);
+                                            rvComments.setItemAnimator(new DefaultItemAnimator());
+                                            rvComments.setAdapter(commentsAdapter);
+                                            String key = clickedEvent.getEventKey();
+                                            DatabaseReference commentsDatabace = mFirebaseDatabase.child(key).child("eventImages")
+                                                    .child("" + SelectedImagePosition)
+                                                    .child("imgComments");
+
+                                            commentsDatabace.addValueEventListener(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                    commentFirebaseArrayList.clear();
+                                                    for (DataSnapshot data : dataSnapshot.getChildren()) {
+                                                        EventCommentFirebase value = data.getValue(EventCommentFirebase.class);
+                                                        commentFirebaseArrayList.add(value);
+                                                        if (imageList.get(position).getImgComments() != null) {
+                                                            imageList.get(position).getImgComments().put(data.getKey(), value);
+                                                        } else {
+                                                            Map<String, EventCommentFirebase> val = new HashMap<>();
+                                                            val.put(data.getKey(), value);
+                                                            imageList.get(position).setImgComments(val);
+                                                        }
+                                                    }
+                                                    Collections.reverse(commentFirebaseArrayList);
+                                                    commentsAdapter.notifyDataSetChanged();
+                                                    mAdapter.notifyDataSetChanged();
+                                                    rvComments.scrollToPosition(commentFirebaseArrayList.size());
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                }
+                                            });
+
+
+                                        }
+                                    }, new View.OnLongClickListener() {
+                                @Override
+                                public boolean onLongClick(View v) {
+                                    return false;
+                                }
+                            });
+                            rvEventAllImages.setAdapter(mAdapter);
+                            mAdapter.notifyDataSetChanged();
+                        }
+                    }
+
+                } else {
+                    rvEventAllImages.setVisibility(View.GONE);
+                    rvUserwiseImages.setVisibility(View.VISIBLE);
+
+
+                    imgSwitchGallaryToTimeline.setImageResource(R.drawable.ic_timeline);
+
+
+                    ArrayList<EventImageFirebase> imageListToSend = new ArrayList<>();
+
+                    if (imageList != null) {
+                        if (imageList.size() > 0) {
+                            for (int i = 0; i < imageList.size(); i++) {
+                                if (isPresentInList(imageListToSend, imageList.get(i).getImgUploaderName()) == -1) {
+                                    EventImageFirebase eventImageFirebase = new EventImageFirebase();
+                                    eventImageFirebase.setImgPath(imageList.get(i).getImgPath());
+                                    eventImageFirebase.setImgUploaderName(imageList.get(i).getImgUploaderName());
+                                    eventImageFirebase.setImgUploaderUserName(imageList.get(i).getImgUploaderUserName());
+                                    eventImageFirebase.setImgUploaderPhoto(imageList.get(i).getImgUploaderPhoto());
+                                    eventImageFirebase.setImgUploadTime(imageList.get(i).getImgUploadTime());
+                                    imageListToSend.add(eventImageFirebase);
+                                } else {
+                                    int position = isPresentInList(imageListToSend, imageList.get(i).getImgUploaderName());
+                                    imageListToSend.get(position).setImgPath(imageListToSend.get(position).getImgPath() + "," + imageList.get(i).getImgPath());
+
+                                }
+                            }
+                        }
+                    }
+
+                    EventPhotoUserWiseAdapter mAdapter = new EventPhotoUserWiseAdapter(imageListToSend, AllEventImagesDisplayActivity.this);
+                    RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+                    rvUserwiseImages.setLayoutManager(mLayoutManager);
+                    rvUserwiseImages.setItemAnimator(new DefaultItemAnimator());
+                    rvUserwiseImages.setAdapter(mAdapter);
+
+
+
+
+
+                }
 
                 /*Intent intent = new Intent(AddNewEventActivity.this, MainActivity.class);
                 startActivity(intent);

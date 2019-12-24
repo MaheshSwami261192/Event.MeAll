@@ -50,7 +50,12 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
         Contact contact = contactListFilter.get(position);
         holder.tvContactName.setText(contact.getName());
-        holder.tvContactSubName.setText(contact.getSubname());
+
+        if(!contact.getUserName().equals(""))
+        holder.tvContactSubName.setText(contact.getUserName());
+        else
+            holder.tvContactSubName.setText(contact.getSubname());
+
 
 
         if (null != contactListFilter.get(position).getIsSelected()) {
